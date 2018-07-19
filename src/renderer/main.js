@@ -8,7 +8,7 @@ import store from './store'
 // vendors
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
-import 'vue-material/dist/theme/default-dark.css' // must default css
+import 'vue-material/dist/theme/black-green-dark.css' // must default css
 
 Vue.use(VueMaterial)
 

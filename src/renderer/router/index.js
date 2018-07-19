@@ -8,7 +8,29 @@ export default new Router({
     {
       path: '/',
       name: 'main',
-      component: require('@/components/main').default
+      component: require('@/components/main').default,
+      children: [
+        {
+          path: '/home',
+          name: 'main',
+          component: require('@/components/tabs/home').default
+        },
+        {
+          path: '/news',
+          name: 'news',
+          component: require('@/components/tabs/news').default
+        },
+        {
+          path: '/video',
+          name: 'video',
+          component: require('@/components/tabs/video').default
+        },
+        {
+          path: '/photo',
+          name: 'photo',
+          component: require('@/components/tabs/photo').default
+        }
+      ]
     },
     {
       path: '*',
