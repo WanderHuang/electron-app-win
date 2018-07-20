@@ -1,5 +1,5 @@
 <template>
-  <div class="elife-home-page">
+  <div class="elife-home-page markdown-body">
     <div v-html="msg"></div>
   </div>
 </template>

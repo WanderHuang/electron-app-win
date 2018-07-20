@@ -47,7 +47,6 @@
       </md-app-drawer>
       <md-app-content>
         <router-view></router-view>
-        <div>ID: {{id}}</div>
       </md-app-content>
     </md-app>
   </div>
@@ -60,6 +59,9 @@
       menuVisible: false,
       id: ''
     }),
+    created () {
+      this.$router.push('/home')
+    },
     methods: {
       tabChange (id) {
         this.id = id

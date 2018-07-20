@@ -58,6 +58,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "github-markdown-css": "^2.10.0",
     "koa": "^2.5.2",
     "koa-router": "^7.4.0",
     "marked": "^0.4.0",
