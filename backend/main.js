@@ -3,6 +3,9 @@ const chalk = require('chalk')
 const fs = require('fs')
 const Router = require('koa-router')
 
+// server
+const {fileReader} = require('./utils/fileReader')
+
 let routers = new Router()
 
 routers.get('/', async ( ctx )=>{
@@ -14,9 +17,19 @@ routers.get('/getArticleByName', async ( ctx )=>{
   ctx.body = content
 })
 
+// get dirs
+routers.get('/getDirTree', async ( ctx )=>{
+  let tree = []
+  console.log(__dirname)
+  fileReader.getDirTree(tree, 'docs')
+  ctx.body = tree
+})
 
-
-
+// get files 文件下载初步 良好的情况应该是文件服务器
+routers.get('/docs/:path', async ( ctx ) => {
+  console.log(ctx.params.path)
+  ctx.body = fs.readFileSync(ctx.path.substring(1))
+})
 
 const app = new Koa();
 app.use(async (ctx, next) => {
