@@ -23,7 +23,7 @@
 </script>
 <style>
 .elife-news-page {
-  height: 500px;
+  height: 100%;
 }
 </style>
 

@@ -10,6 +10,6 @@
 </script>
 <style>
 .elife-video-page {
-  height: 500px;
+  height: 100%;
 }
 </style>

@@ -1,18 +1,22 @@
 <template>
   <div class="elife-home-page">
-    <md-toolbar md-dense>
-      <md-button class="md-icon-button md-raised" @click="goBack">
-        <md-icon>keyboard_arrow_left</md-icon>
-      </md-button>
+    <div class="home-toolbar">
       <md-button class="md-icon-button md-raised">
         <md-icon>keyboard_arrow_right</md-icon>
       </md-button>
-    </md-toolbar>
+      <md-button class="md-icon-button md-raised" @click="goBack">
+        <md-icon>keyboard_arrow_left</md-icon>
+      </md-button>
+    </div>
     <div class="home-page-list">
       <div v-for="file in files" :key="file.path" class="list-item" @click="folderClicked(file)">
-        <md-icon class="md-size-4x list-item-icon" v-if="file.type === 'dir'">folder</md-icon>
-        <md-icon class="md-size-4x list-item-icon" v-else>event_note</md-icon>
+        <md-icon class="md-size-4x md-primary" v-if="file.type === 'dir'">folder</md-icon>
+        <md-icon class="md-size-4x md-primary" v-else>event_note</md-icon>
         <span class="list-item-text">{{file.name}}</span>
+      </div>
+      <div class="list-item">
+        <md-icon class="md-size-4x md-primary">note_add</md-icon>
+        <span class="list-item-text">新增</span>
       </div>
     </div>
   </div>
@@ -72,8 +76,11 @@ export default {
 </script>
 <style scoped>
 .elife-home-page {
-  margin-top: 10px;
-  height: 500px;
+  height: 100%;
+}
+.home-toolbar{
+  display: flex;
+  flex-direction: row-reverse;
 }
 .home-page-list {
   display: flex;
@@ -88,10 +95,7 @@ export default {
 }
 .list-item:hover {
   cursor: pointer;
-  background-color: rgba(123, 123, 123, 0.5)
-}
-.list-item .list-item-icon {
-  color:rgba(249, 236, 137, 0.9);
+  background-color: rgba(150, 202, 247, 0.5)
 }
 .list-item .list-item-text {
   align-content: center;

@@ -9,6 +9,7 @@ import store from './store'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/black-green-dark.css' // must default css
+// import '&/static/style/custom-material.css'
 import marked from 'marked'
 
 Vue.use(VueMaterial)

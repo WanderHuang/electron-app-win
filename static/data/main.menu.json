@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "path": "/home",
+    "icon": "home",
+    "text": "主页文档"
+  },
+  {
+    "id": 2,
+    "path": "/news",
+    "icon": "ballot",
+    "text": "新闻"
+  },
+  {
+    "id": 3,
+    "path": "/video",
+    "icon": "videocam",
+    "text": "视频"
+  },
+  {
+    "id": 4,
+    "path": "/photo",
+    "icon": "photo_camera",
+    "text": "相册"
+  }
+]

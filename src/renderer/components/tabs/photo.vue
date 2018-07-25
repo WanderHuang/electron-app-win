@@ -10,7 +10,7 @@
 </script>
 <style>
 .elife-photo-page {
-  height: 500px;
+  height: 100%;
 }
 </style>
 
