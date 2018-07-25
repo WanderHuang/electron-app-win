@@ -13,7 +13,7 @@ routers.get('/', async ( ctx )=>{
 })
 
 routers.get('/getArticleByName', async ( ctx )=>{
-  let content = fs.readFileSync('docs/世界杯小记.md')
+  let content = fs.readFileSync('docs/shijiebeixiaoji.md')
   ctx.body = content
 })
 
