@@ -1,0 +1,66 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+      #holder {
+        width: 300px;
+        min-height: 300px;
+        margin: 20px auto;
+      }
+      .plain {
+        border: 10px dashed #ccc;
+      }
+      .hover {
+        border: 10px dashed #0c0;
+      }
+    </style>
+</head>
+<body>
+　<div id="holder" class="plain"></div>
+  <script>
+    window.onload = function () {
+      if('draggable' in document.createElement('span')){
+        var holder = document.getElementById('holder')
+        holder.ondragover = function (e) {
+          this.className = 'hover'
+          return false
+        }
+        holder.ondragleave = function () {
+          this.className = 'plain'
+          return false
+        }
+        holder.ondrop = function (event) {
+          event.preventDefault()
+          this.className = 'plain'
+          var files = event.dataTransfer.files
+         
+          // upload
+          var xhr = new XMLHttpRequest()
+          xhr.open('POST', 'http://localhost:10086/upload')
+          xhr.onreadystatechange = function (e) {
+            // 0	UNSENT (未打开)	open()方法还未被调用.
+            // 1	OPENED  (未发送)	
+            // open()方法已经被调用.
+
+            // 2	HEADERS_RECEIVED (已获取响应头)	send()方法已经被调用, 响应头和响应状态已经返回.
+            // 3	LOADING (正在下载响应体)	响应体下载中; responseText中已经获取了部分数据.
+            // 4	DONE (请求完成)	整个请求过程已经完毕.
+            console.log('onreadystatechange: ' + xhr.readyState)
+          }
+          xhr.onload = function () {
+            console.log('onload: ' + xhr.status)
+          }
+          var formData = new FormData()
+          for(var i = 0; i < files.length; i++) {
+            formData.append(files[i].name, files[i])
+          }
+          xhr.send(formData)
+        }
+      }
+    }
+  </script>
+</body>
+</html>
