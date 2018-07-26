@@ -13,55 +13,51 @@ router.post('/upload', async (ctx) => {
   form.hash = 'md5'
   form.multiples = true
 
-  let p = new Promise((resolve, reject) => {
-    form.parse(ctx.req, function (err, valueKeys, fileKeys) {
-      console.log(err)
-      console.log(chalk.magenta(Object.keys(valueKeys)))
-      let keys = Object.keys(fileKeys)
-      keys.map((key, index) => {
-        console.log(chalk.yellow(fs.existsSync(fileKeys[key].path)))
-        fs.copyFileSync(fileKeys[key].path, path.join(__dirname, './output/' + fileKeys[key].name))
-      })
-      resolve(keys)
+  form.parse(ctx.req, function (err, valueKeys, fileKeys) {
+    console.log(err)
+    console.log(chalk.magenta(Object.keys(valueKeys)))
+    let keys = Object.keys(fileKeys)
+    keys.map((key, index) => {
+      console.log(chalk.yellow(fs.existsSync(fileKeys[key].path)))
+      fs.copyFileSync(fileKeys[key].path, path.join(__dirname, './docs/' + fileKeys[key].name))
     })
-  })
-  p.then((keys) => {
+    resolve(keys)
   })
   ctx.body = '\'_\''
 
-  form.on('file', function (name, file) {
-    console.log(chalk.cyan('-----------------'))
-    console.log(chalk.cyan(name))
-    console.log(chalk.cyan(JSON.stringify(file.toJSON())))
-    console.log(chalk.cyan('-----------------'))
-  })
+  // form.on('file', function (name, file) {
+  //   console.log(chalk.cyan('-----------------'))
+  //   console.log(chalk.cyan(name))
+  //   console.log(chalk.cyan(JSON.stringify(file.toJSON())))
+  //   console.log(chalk.cyan('-----------------'))
+  // })
 
-  form.on('fileBegin', function (name, file) {
-    console.log(chalk.yellow('========================'))
-    console.log(chalk.yellow(file.path))
-    console.log(chalk.yellow(fs.existsSync(file.path)))
-    console.log(chalk.yellow('========================'))
-  })
+  // form.on('fileBegin', function (name, file) {
+  //   console.log(chalk.yellow('========================'))
+  //   console.log(chalk.yellow(file.path))
+  //   console.log(chalk.yellow(fs.existsSync(file.path)))
+  //   console.log(chalk.yellow('========================'))
+  // })
 
-  form.on('progress', function (bytesReceived, bytesExpected) {
-    console.log('current > ' + ((bytesReceived / bytesExpected) * 100) + '%')
-  })
+  // form.on('progress', function (bytesReceived, bytesExpected) {
+  //   console.log('current > ' + ((bytesReceived / bytesExpected) * 100) + '%')
+  // })
 
-  let buf1 = Buffer.alloc(0)
-  form.handlePart = function (part) {
-    part.on('data', function (data) {
-      if (data.length !== 0) {
-        console.log('=================')
-        console.log(data)
-        console.log('=================')
-        buf1 = Buffer.concat([buf1, data], data.length + buf1.length)
-      }
-    })
+  // let buf1 = Buffer.alloc(0)
+  // form.handlePart = function (part) {
+  //   part.on('data', function (data) {
+  //     if (data.length !== 0) {
+  //       console.log('=================')
+  //       console.log(data)
+  //       console.log('=================')
+  //       buf1 = Buffer.concat([buf1, data], data.length + buf1.length)
+  //     }
+  //   })
 
-    part.on('end', function () {
-      fs.writeFile(path.join(__dirname, './output/name.json'), buf1)
-    })
-  }
+  //   part.on('end', function () {
+  //     fs.writeFile(path.join(__dirname, './output/name.json'), buf1)
+  //   })
+  // }
 })
 
 const koa = new Koa()
