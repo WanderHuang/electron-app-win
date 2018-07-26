@@ -21,7 +21,6 @@ router.post('/upload', async (ctx) => {
       console.log(chalk.yellow(fs.existsSync(fileKeys[key].path)))
       fs.copyFileSync(fileKeys[key].path, path.join(__dirname, './docs/' + fileKeys[key].name))
     })
-    resolve(keys)
   })
   ctx.body = '\'_\''
 

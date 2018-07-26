@@ -1,6 +1,12 @@
 <template>
   <div class="elife-home-page">
     <div class="home-toolbar">
+      <md-button class="md-icon-button md-raised" @click="downloadFile">
+        <md-icon>save_alt</md-icon>
+      </md-button>
+      <md-button class="md-icon-button md-raised" @click="deleteFile">
+        <md-icon>delete</md-icon>
+      </md-button>
       <md-button class="md-icon-button md-raised">
         <md-icon>keyboard_arrow_right</md-icon>
       </md-button>
@@ -12,7 +18,8 @@
       <div v-for="file in files" :key="file.path" class="list-item" @click="folderClicked(file)">
         <md-icon class="md-size-4x md-primary" v-if="file.type === 'dir'">folder</md-icon>
         <md-icon class="md-size-4x md-primary" v-else>event_note</md-icon>
-        <span class="list-item-text">{{file.name}}</span>
+        <md-radio v-model="filePath" :value="file.path" :title="file.name" v-if="file.type !== 'dir'"><span class="list-item-text">{{file.name.length > 8 ? file.name.substring(0, 5) + '...': file.name}}</span></md-radio>
+        <span class="list-item-text" :title="file.name" v-else>{{file.name.length > 8 ? file.name.substring(0, 5) + '...': file.name}}</span>
       </div>
       <div ref="uploadEl" :class="uploadEventStatus === 'off' ? 'list-item file-add-box': 'list-item file-add-box file-hover'">
         <md-icon class="md-size-4x md-primary">note_add</md-icon>
@@ -29,7 +36,9 @@ export default {
     return {
       uploadEventStatus: 'off',
       pipe: [],
-      uploadEl: {}
+      uploadEl: {},
+      selected: {},
+      filePath: ''
     }
   },
   computed: {
@@ -39,6 +48,17 @@ export default {
     },
     current () {
       return this.pipe[this.pipe.length - 1].path
+    }
+  },
+  watch: {
+    filePath (path) {
+      let file = {}
+      this.files.map(item => {
+        if (item.path === path) {
+          file = item
+        }
+      })
+      this.selected = file
     }
   },
   mounted () {
@@ -93,7 +113,9 @@ export default {
       if (file.type === 'dir') {
         this.pipe.push(file) // next
       } else {
-        this.download(file) // download or redirect
+        // this.download(file) // download or redirect
+        file._checked = true
+        this.selected = file
       }
     },
     loadCurrentPage (current) { // recovery
@@ -108,28 +130,48 @@ export default {
     },
     clearDirTree () {
       this.pipe = []
+      this.filePath = ''
     },
     goBack (e) {
       if (this.pipe.length > 1) {
         this.pipe.pop()
       }
     },
+    downloadFile () {
+      this.download(this.selected)
+    },
+    deleteFile () {
+      this.delete(this.selected)
+    },
     download (file) { // TODO 文件下载
-      console.log(file.path)
-      this.$http.post(_config.host + 'docs/get', {
-        path: file.path,
-        name: file.name
-      }, {
-        responseType: 'blob'
+      this.$http({
+        method: 'post',
+        url: _config.host + 'docs/get',
+        responseType: 'blob',
+        data: {
+          path: file.path
+        }
       })
-        .then(res => {
-          debugger
-          let url = window.URL.createObjectURL(new Blob(res.data))
+        .then((res) => {
+          // 利用返回的blob对象进行下载
+          let url = window.URL.createObjectURL(res.data)
           let link = document.createElement('a')
-          link.style.display = 'none'
           link.href = url
+          link.download = file.name
+          link.style.display = 'none'
           document.body.appendChild(link)
           link.click()
+          this.loadDirTrees(this.current)
+        })
+    },
+    delete (file) {
+      this.$http.post(_config.host + 'docs/delete', {
+        path: file.path
+      })
+        .then(res => {
+          if (res.data.code === 0) {
+            this.loadDirTrees(this.current)
+          }
         })
     }
   }
@@ -156,6 +198,9 @@ export default {
 }
 .list-item:hover {
   cursor: pointer;
+  background-color: rgba(150, 202, 247, 0.5)
+}
+.list-item-checked {
   background-color: rgba(150, 202, 247, 0.5)
 }
 .list-item .list-item-text {
