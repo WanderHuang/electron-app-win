@@ -1,25 +1,27 @@
 <template>
   <div class="elife-home-page">
     <div class="home-toolbar">
+      <md-button class="md-icon-button md-raised" @click="refresh">
+        <md-icon>cached</md-icon>
+      </md-button>
+      <md-button class="md-icon-button md-raised" @click="readFile">
+        <md-icon>remove_red_eye</md-icon>
+      </md-button>
       <md-button class="md-icon-button md-raised" @click="downloadFile">
         <md-icon>save_alt</md-icon>
       </md-button>
       <md-button class="md-icon-button md-raised" @click="deleteFile">
         <md-icon>delete</md-icon>
       </md-button>
-      <md-button class="md-icon-button md-raised">
-        <md-icon>keyboard_arrow_right</md-icon>
-      </md-button>
       <md-button class="md-icon-button md-raised" @click="goBack">
         <md-icon>keyboard_arrow_left</md-icon>
       </md-button>
     </div>
     <div class="home-page-list">
-      <div v-for="file in files" :key="file.path" class="list-item" @click="folderClicked(file)">
+      <div v-for="file in files" :key="file.path" :class="{'list-item': true, 'list-item-checked': file._index === selected._index}" @click="fileChoose(file)" @dblclick="fileChoose(file, true)">
         <md-icon class="md-size-4x md-primary" v-if="file.type === 'dir'">folder</md-icon>
         <md-icon class="md-size-4x md-primary" v-else>event_note</md-icon>
-        <md-radio v-model="filePath" :value="file.path" :title="file.name" v-if="file.type !== 'dir'"><span class="list-item-text">{{file.name.length > 8 ? file.name.substring(0, 5) + '...': file.name}}</span></md-radio>
-        <span class="list-item-text" :title="file.name" v-else>{{file.name.length > 8 ? file.name.substring(0, 5) + '...': file.name}}</span>
+        <span class="list-item-text" :title="file.name">{{file.name.length > 8 ? file.name.substring(0, 5) + '...': file.name}}</span>
       </div>
       <div ref="uploadEl" :class="uploadEventStatus === 'off' ? 'list-item file-add-box': 'list-item file-add-box file-hover'">
         <md-icon class="md-size-4x md-primary">note_add</md-icon>
@@ -29,7 +31,7 @@
   </div>
 </template>
 <script>
-import _config from '&/static/config.json'
+import {getDirTreeUrl, uploadUrl, downloadUrl, deleteUrl} from '@/api/index'
 export default {
   name: 'elife-home',
   data: () => {
@@ -44,21 +46,16 @@ export default {
   computed: {
     files () {
       if (this.pipe.length === 0) return []
-      else return this.pipe[this.pipe.length - 1].children
+      else {
+        let children = this.pipe[this.pipe.length - 1].children
+        return children.map((item, index) => {
+          item._index = index
+          return item
+        })
+      }
     },
     current () {
       return this.pipe[this.pipe.length - 1].path
-    }
-  },
-  watch: {
-    filePath (path) {
-      let file = {}
-      this.files.map(item => {
-        if (item.path === path) {
-          file = item
-        }
-      })
-      this.selected = file
     }
   },
   mounted () {
@@ -70,7 +67,7 @@ export default {
     loadDirTrees (current) { // load trees
       let $this = this
       $this.clearDirTree()
-      $this.$http.get(_config.host + 'getDirTree')
+      $this.$http.get(getDirTreeUrl)
         .then(res => {
           let item = {
             path: '/',
@@ -103,19 +100,18 @@ export default {
         }
         formData.append('current', this.current)
 
-        this.$http.post(_config.host + 'upload', formData) // upload
+        this.$http.post(uploadUrl, formData) // upload
           .then(res => {
             this.loadDirTrees(this.current) // reload trees
           })
       }
     },
-    folderClicked (file) { // item clicked
+    fileChoose (file, isDbl) { // item clicked
       if (file.type === 'dir') {
         this.pipe.push(file) // next
       } else {
-        // this.download(file) // download or redirect
-        file._checked = true
         this.selected = file
+        isDbl && this.readFile()
       }
     },
     loadCurrentPage (current) { // recovery
@@ -130,7 +126,7 @@ export default {
     },
     clearDirTree () {
       this.pipe = []
-      this.filePath = ''
+      this.selected = {}
     },
     goBack (e) {
       if (this.pipe.length > 1) {
@@ -140,13 +136,20 @@ export default {
     downloadFile () {
       this.download(this.selected)
     },
+    readFile () { // 跳转到浏览文件
+      console.log(`You will read "${this.selected.path}"`)
+      this.$router.push({name: 'readFile', params: {path: this.selected.path}})
+    },
+    refresh () { // 刷新页面
+      this.loadDirTrees()
+    },
     deleteFile () {
       this.delete(this.selected)
     },
     download (file) { // TODO 文件下载
       this.$http({
         method: 'post',
-        url: _config.host + 'docs/get',
+        url: downloadUrl,
         responseType: 'blob',
         data: {
           path: file.path
@@ -165,7 +168,7 @@ export default {
         })
     },
     delete (file) {
-      this.$http.post(_config.host + 'docs/delete', {
+      this.$http.post(deleteUrl, {
         path: file.path
       })
         .then(res => {
@@ -198,6 +201,9 @@ export default {
 }
 .list-item:hover {
   cursor: pointer;
+  background-color: rgba(150, 202, 247, 0.5)
+}
+.list-item-checked {
   background-color: rgba(150, 202, 247, 0.5)
 }
 .list-item-checked {

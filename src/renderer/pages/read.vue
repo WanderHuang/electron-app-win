@@ -1,11 +1,16 @@
 <template>
-  <div class="elife-news-page markdown-body">
+  <div class="elife-read-page markdown-body">
+    <div class="read-toolbar">
+      <md-button class="md-icon-button md-raised" @click="goBack">
+        <md-icon>keyboard_arrow_left</md-icon>
+      </md-button>
+    </div>
     <div v-html="msg"></div>
   </div>
 </template>
 <script>
 import {readArticleUrl} from '@/api/index'
-// TODO 改为文章列表
+// TODO 支持MD PDF WORD EXCEL TXT等文本、支持图像、支持视频
 export default {
   name: 'elife-news',
   data: () => {
@@ -27,13 +32,20 @@ export default {
         .catch(err => {
           console.error(err)
         })
+    },
+    goBack () {
+      this.$router.go(-1) // 后退一页
     }
   }
 }
 </script>
 <style>
-.elife-news-page {
+.elife-read-page {
   height: 100%;
+}
+.read-toolbar {
+  display: flex;
+  flex-direction: row-reverse;
 }
 </style>
 

@@ -13,8 +13,8 @@ router.get('/', async ( ctx )=>{
   ctx.body = 'hello world'
 })
 
-router.get('/getArticleByName', async ( ctx )=>{
-  let content = fs.readFileSync('docs/shijiebeixiaoji.md')
+router.get('/readArticleByPath', async ( ctx ) => {
+  let content = fs.readFileSync(ctx.query.path)
   ctx.body = content
 })
 
