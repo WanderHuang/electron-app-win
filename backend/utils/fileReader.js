@@ -6,7 +6,7 @@ const getDirTree = function (res, base) {
   if (fs.lstatSync(base).isDirectory()) {
     let dirs = fs.readdirSync(base)
     for (let i = 0; i < dirs.length; i++) {
-      let _path = base + '\\' + dirs[i]
+      let _path = base + path.sep + dirs[i]
       let item = {
         path: _path,
         name: path.basename(_path),
