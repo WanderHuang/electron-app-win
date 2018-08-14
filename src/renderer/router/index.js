@@ -34,6 +34,11 @@ export default new Router({
           path: '/photo',
           name: 'photo',
           component: require('@/components/tabs/photo').default
+        },
+        {
+          path: '/talk',
+          name: 'talk',
+          component: require('@/components/tabs/talk').default
         }
       ]
     },

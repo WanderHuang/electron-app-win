@@ -22,5 +22,11 @@
     "path": "/photo",
     "icon": "photo_camera",
     "text": "相册"
+  },
+  {
+    "id": 5,
+    "path": "/talk",
+    "icon": "chat",
+    "text": "群聊"
   }
 ]
