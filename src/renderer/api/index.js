@@ -1,10 +1,7 @@
 import _config from '&/static/config.json'
 
-// 阅读文章
-export const readArticleUrl = `${_config.host}/readArticleByPath`
-
-// 加载PDF
-export const readPdfUrl = `${_config.host}/readPdfByPath`
+// 阅读文章 需要带上文件路径
+export const readArticleUrl = `${_config.host}/`
 
 // 获取文件树
 export const getDirTreeUrl = `${_config.host}/getDirTree`

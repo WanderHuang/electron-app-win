@@ -15,6 +15,7 @@ import 'vue-material/dist/theme/black-green-dark.css' // must default css
 // import '&/static/style/custom-material.css'
 import marked from 'marked'
 import io from 'socket.io-client'
+import pdf from 'pdfjs-dist'
 
 Vue.use(VueMaterial)
 Vue.prototype.$socket = io(config.socketUrl)
@@ -25,6 +26,7 @@ Vue.config.productionTip = false
 // extensions
 Vue.prototype.$marked = marked
 Vue.http = Vue.prototype.$http = axios
+Vue.prototype.$pdf = pdf
 
 /* eslint-disable no-new */
 new Vue({

@@ -7,25 +7,24 @@
     </div>
     <div class="read-content">
       <div v-if="msg" v-html="msg"></div>
-      <div v-if="fileType === 'md'" v-html="fileContent"></div>
-      <div v-if="fileType === 'pdf'">
-        <iframe v-for="pdfPage in pdfPages" :src="pdfPage"></iframe>
-      </div>
+      <div v-if="fileType === 'md' || fileType === 'txt'" v-html="fileContent"></div>
+      <div v-if="fileType === 'pdf'" id="pdf"></div>
     </div>
   </div>
 </template>
 <script>
-import {readArticleUrl, readPdfUrl} from '@/api/index'
+import {readArticleUrl} from '@/api/index'
 // TODO 支持MD PDF WORD EXCEL TXT等文本、支持图像、支持视频
+// TODO 文件缩放比例查看
 export default {
   name: 'elife-news',
   data: () => {
     return {
-      typesArray: ['md', 'pdf'], // 支持类型
+      typesArray: ['md', 'pdf', 'txt'], // 支持类型
       fileType: 'md',
       msg: null,
       fileContent: '',
-      pdfPages: []
+      pdfs: []
     }
   },
   created () {
@@ -34,7 +33,7 @@ export default {
     if (this.typesArray.includes(this.fileType)) {
       this.readArticle(this.$route.params.path, this.fileType)
     } else {
-      this.msg = '**This type is not supported to read online, please download it**'
+      this.msg = this.$marked('**This type is not supported to read online, please download it**')
     }
   },
   destroyed () {
@@ -44,35 +43,54 @@ export default {
   },
   methods: {
     readArticle (path, fileType) {
-      switch (fileType) {
-        case 'md':
-          this.readMarkdown(path)
-          break
-        case 'pdf':
-          this.readPdf(path)
-          break
-        default:
-          this.msg = 'Nothing'
-          break
+      if (fileType === 'pdf') {
+        this.loadPdfFile(path)
+      }
+      if (fileType === 'md' || fileType === 'txt') {
+        this.loadTextFile(path)
       }
     },
-    readMarkdown (path) {
-      let $this = this
-      this.$http.get(readArticleUrl, {params: {path}})
+    loadTextFile (path) { // 加载文本格式文件 md txt
+      this.$http.get(readArticleUrl + path.replace(/.*docs./, ''))
         .then(response => {
-          $this.fileContent = $this.$marked(response.data) // markdown files
+          this.fileContent = this.$marked(response.data)
         })
         .catch(err => {
           console.error(err)
         })
     },
-    readPdf (path) {
-      this.$http.get(readPdfUrl, {params: {path}})
-        .then(response => {
-          this.pdfPages.push(response.data)
+    loadPdfFile (path) { // 加载pdf格式文件
+      let loadingTask = this.$pdf.getDocument(readArticleUrl + path.replace(/.*docs./, ''))
+      loadingTask.promise
+        .then(pdfDocument => {
+          let numPages = pdfDocument.numPages
+          let promises = []
+          for (let i = 1; i <= numPages; i++) {
+            let promise = pdfDocument.getPage(i)
+              .then(pdfPage => {
+                let viewport = pdfPage.getViewport(1.0)
+                let canvas = document.createElement('canvas')
+                canvas.width = viewport.width
+                canvas.height = viewport.height
+                let ctx = canvas.getContext('2d')
+                let renderTask = pdfPage.render({
+                  canvasContext: ctx,
+                  viewport: viewport
+                })
+                this.pdfs.push(canvas)
+                return renderTask.promise
+              })
+            promises.push(promise)
+          }
+          Promise.all(promises)
+            .then(res => {
+              for (let i = 0; i < this.pdfs.length; i++) {
+                document.getElementById('pdf').appendChild(this.pdfs[i])
+              }
+            })
         })
-        .catch(err => {
-          console.error(err)
+        .catch(function (reason) {
+          console.error('Error: ' + reason)
         })
     },
     goBack () {
