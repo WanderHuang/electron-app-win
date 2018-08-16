@@ -1,8 +1,10 @@
 const fs = require('fs')
 const path = require('path')
 
-const getDirTree = function (res, base) {
-  console.log('BaseDir: ' + base)
+// 获取文件树
+const getDirTree = function (base) {
+  let res = []
+  console.log(`-----  ${base}`)
   if (fs.lstatSync(base).isDirectory()) {
     let dirs = fs.readdirSync(base)
     for (let i = 0; i < dirs.length; i++) {
@@ -15,13 +17,14 @@ const getDirTree = function (res, base) {
       }
       if (fs.lstatSync(_path).isDirectory()) {
         item.type = 'dir'
-        getDirTree(item.children, _path)
+        item.children = getDirTree(_path)
       } else {
         item.type = _path.split('.')[1]
       }
       res.push(item)
     }
   }
+  return res
 }
 
 const fileReader = {

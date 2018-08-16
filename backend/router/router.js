@@ -13,21 +13,23 @@ router.get('/', async ( ctx )=>{
   ctx.body = 'hello world'
 })
 
-router.get('/readArticleByPath', async ( ctx ) => {
+router.get('/readArticleByPath', async (ctx) => {
+  console.log(chalk.yellow('[READ]'))
   let content = fs.readFileSync(ctx.query.path)
   ctx.body = content
 })
 
 // get dirs
-router.get('/getDirTree', async ( ctx )=>{
-  let tree = []
-  console.log(__dirname)
-  fileReader.getDirTree(tree, 'docs')
-  ctx.body = tree
+router.get('/getDirTree', async (ctx) => {
+  console.log(chalk.yellow('[LIST]'))
+  let baseDir = path.resolve('backend', 'docs')
+  console.log(baseDir)
+  ctx.body = fileReader.getDirTree(baseDir)
 })
 
 // 删除文件
-router.post('/docs/delete', async ( ctx ) => {
+router.post('/docs/delete', async (ctx) => {
+  console.log(chalk.yellow('[DELETE]'))
   const form = new formidable.IncomingForm()
   let params = {}
   await new Promise((resolve, reject) => {
@@ -36,7 +38,7 @@ router.post('/docs/delete', async ( ctx ) => {
       resolve()
     })
   })
-  let realPath = path.join(__dirname, '../../' + params.path)
+  let realPath = path.resolve('backend', params.path)
   console.log('DELETE: ' + realPath)
   if(fs.existsSync(realPath)) {
     fs.unlinkSync(realPath)
@@ -57,6 +59,7 @@ router.post('/docs/delete', async ( ctx ) => {
 // get files 文件下载初步 良好的情况应该是文件服务器
 // 返回文档流
 router.post('/docs/get', async ( ctx ) => {
+  console.log(chalk.yellow('[GET]'))
   const form = new formidable.IncomingForm()
   let params = {}
   await new Promise((resolve, reject) => {
@@ -71,9 +74,9 @@ router.post('/docs/get', async ( ctx ) => {
 
 // 文件上传初步 良好情况下应该分类、分目录、限流、支持批量上传
 router.post('/upload', async (ctx) => {
-  console.log(chalk.yellow('parsing file: '))
+  console.log(chalk.yellow('[UPLOAD]'))
   const form = new formidable.IncomingForm()
-  form.uploadDir = path.join(__dirname, '../upload')
+  form.uploadDir = path.resolve('backend', 'upload')
   form.hash = 'md5'
   form.multiples = true
 
@@ -81,12 +84,13 @@ router.post('/upload', async (ctx) => {
     form.parse(ctx.req, function (err, valueKeys, fileKeys) {
       let current = valueKeys.current
       current = current === '/' ? 'docs' : current
-      let keys = Object.keys(fileKeys)
-      keys.map((key, index) => {
-        console.log(chalk.yellow(fs.existsSync(fileKeys[key].path)))
-        fs.copyFileSync(fileKeys[key].path, path.join(__dirname, '../../' + current + '/' + fileKeys[key].name))
+      Object.keys(fileKeys).map((key, index) => {
+        if (fs.existsSync(fileKeys[key].path)) {
+          fs.copyFileSync(fileKeys[key].path, path.resolve('backend', current, fileKeys[key].name))
+          fs.unlinkSync(fileKeys[key].path)
+        }
       })
-      resolve(keys)
+      resolve()
     })
   })
   ctx.body = '\'_\''

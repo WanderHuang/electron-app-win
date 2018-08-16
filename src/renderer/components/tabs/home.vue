@@ -138,7 +138,7 @@ export default {
     },
     readFile () { // 跳转到浏览文件
       console.log(`You will read "${this.selected.path}"`)
-      this.$router.push({name: 'readFile', params: {path: this.selected.path}})
+      this.$router.push({name: 'readFile', params: {path: this.selected.path, type: this.selected.type}})
     },
     refresh () { // 刷新页面
       this.loadDirTrees()

@@ -5,29 +5,71 @@
         <md-icon>keyboard_arrow_left</md-icon>
       </md-button>
     </div>
-    <div v-html="msg"></div>
+    <div class="read-content">
+      <div v-if="msg" v-html="msg"></div>
+      <div v-if="fileType === 'md'" v-html="fileContent"></div>
+      <div v-if="fileType === 'pdf'">
+        <iframe v-for="pdfPage in pdfPages" :src="pdfPage"></iframe>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-import {readArticleUrl} from '@/api/index'
+import {readArticleUrl, readPdfUrl} from '@/api/index'
 // TODO 支持MD PDF WORD EXCEL TXT等文本、支持图像、支持视频
 export default {
   name: 'elife-news',
   data: () => {
     return {
-      msg: 'Read Your Article By Enter One Path'
+      typesArray: ['md', 'pdf'], // 支持类型
+      fileType: 'md',
+      msg: null,
+      fileContent: '',
+      pdfPages: []
     }
   },
   created () {
     console.log(`News created! ${this.$route.params.path}`)
-    this.$route.params.path && this.readArticle(this.$route.params.path)
+    this.fileType = this.$route.params.type
+    if (this.typesArray.includes(this.fileType)) {
+      this.readArticle(this.$route.params.path, this.fileType)
+    } else {
+      this.msg = '**This type is not supported to read online, please download it**'
+    }
+  },
+  destroyed () {
+    this.msg = ''
+    this.pdfPages = []
+    this.fileType = 'md'
   },
   methods: {
-    readArticle (path) {
+    readArticle (path, fileType) {
+      switch (fileType) {
+        case 'md':
+          this.readMarkdown(path)
+          break
+        case 'pdf':
+          this.readPdf(path)
+          break
+        default:
+          this.msg = 'Nothing'
+          break
+      }
+    },
+    readMarkdown (path) {
       let $this = this
       this.$http.get(readArticleUrl, {params: {path}})
         .then(response => {
-          $this.msg = $this.$marked(response.data)
+          $this.fileContent = $this.$marked(response.data) // markdown files
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
+    readPdf (path) {
+      this.$http.get(readPdfUrl, {params: {path}})
+        .then(response => {
+          this.pdfPages.push(response.data)
         })
         .catch(err => {
           console.error(err)
