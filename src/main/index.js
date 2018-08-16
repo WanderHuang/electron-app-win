@@ -25,6 +25,9 @@ function createWindow () {
     width: 1000
   })
 
+  // 去掉菜单
+  mainWindow.setMenu(null)
+
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
