@@ -17,6 +17,9 @@ import marked from 'marked'
 import io from 'socket.io-client'
 import pdf from 'pdfjs-dist'
 
+// local lib
+import '&/src/renderer/js-lib/common'
+
 Vue.use(VueMaterial)
 Vue.prototype.$socket = io(config.socketUrl)
 
