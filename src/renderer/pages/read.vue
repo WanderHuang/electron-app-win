@@ -1,9 +1,7 @@
 <template>
   <div class="elife-read-page markdown-body">
     <div class="read-toolbar">
-      <md-button class="md-icon-button md-raised" @click="goBack">
-        <md-icon>keyboard_arrow_left</md-icon>
-      </md-button>
+      <el-button type="primary" circle icon="ehome icon-left" @click="goBack"></el-button>
     </div>
     <div class="read-content">
       <div v-if="msg" v-html="msg"></div>

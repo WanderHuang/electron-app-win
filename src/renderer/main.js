@@ -9,9 +9,12 @@ import store from './store'
 import config from '&/static/config'
 
 // vendors
-import VueMaterial from 'vue-material'
-import 'vue-material/dist/vue-material.min.css'
-import 'vue-material/dist/theme/black-green-dark.css' // must default css
+// import VueMaterial from 'vue-material'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import '&/static/style/iconfont/iconfont.css'
+// import 'vue-material/dist/vue-material.min.css'
+// import 'vue-material/dist/theme/black-green-dark.css' // must default css
 // import '&/static/style/custom-material.css'
 import marked from 'marked'
 import io from 'socket.io-client'
@@ -20,7 +23,8 @@ import pdf from 'pdfjs-dist'
 // local lib
 import '&/src/renderer/js-lib/common'
 
-Vue.use(VueMaterial)
+// Vue.use(VueMaterial)
+Vue.use(ElementUI)
 Vue.prototype.$socket = io(config.socketUrl)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))

@@ -2,31 +2,31 @@
   {
     "id": 1,
     "path": "/home",
-    "icon": "home",
+    "icon": "ehome icon-home",
     "text": "主页文档"
   },
   {
     "id": 2,
     "path": "/news",
-    "icon": "ballot",
+    "icon": "ehome icon-newspaper",
     "text": "新闻"
   },
   {
     "id": 3,
     "path": "/video",
-    "icon": "videocam",
+    "icon": "ehome icon-video",
     "text": "视频"
   },
   {
     "id": 4,
     "path": "/photo",
-    "icon": "photo_camera",
+    "icon": "ehome icon-icon10",
     "text": "相册"
   },
   {
     "id": 5,
     "path": "/talk",
-    "icon": "chat",
+    "icon": "ehome icon-chat01",
     "text": "群聊"
   }
 ]

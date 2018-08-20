@@ -1,30 +1,20 @@
 <template>
   <div class="elife-home-page">
     <div class="home-toolbar">
-      <md-button class="md-icon-button md-raised" @click="refresh">
-        <md-icon>cached</md-icon>
-      </md-button>
-      <md-button class="md-icon-button md-raised" @click="readFile">
-        <md-icon>remove_red_eye</md-icon>
-      </md-button>
-      <md-button class="md-icon-button md-raised" @click="downloadFile">
-        <md-icon>save_alt</md-icon>
-      </md-button>
-      <md-button class="md-icon-button md-raised" @click="deleteFile">
-        <md-icon>delete</md-icon>
-      </md-button>
-      <md-button class="md-icon-button md-raised" @click="goBack">
-        <md-icon>keyboard_arrow_left</md-icon>
-      </md-button>
+      <el-button type="primary" circle icon="ehome icon-left" @click="goBack"></el-button>
+      <el-button type="primary" circle icon="ehome icon-delete" @click="deleteFile"></el-button>
+      <el-button type="primary" circle icon="ehome icon-download" @click="downloadFile"></el-button>
+      <el-button type="primary" circle icon="ehome icon-read" @click="readFile"></el-button>
+      <el-button type="primary" circle icon="ehome icon-Shape2" @click="refresh"></el-button>
     </div>
     <div class="home-page-list">
       <div v-for="file in files" :key="file.path" :class="{'list-item': true, 'list-item-checked': file._index === selected._index}" @click="fileChoose(file)" @dblclick="fileChoose(file, true)">
-        <md-icon class="md-size-4x md-primary" v-if="file.type === 'dir'">folder</md-icon>
-        <md-icon class="md-size-4x md-primary" v-else>event_note</md-icon>
+        <i class="ehome icon-foldericon list-item-icon" v-if="file.type === 'dir'"></i>
+        <i class="ehome icon-file list-item-icon" v-else></i>
         <span class="list-item-text" :title="file.name">{{file.name.length > 8 ? file.name.substring(0, 5) + '...': file.name}}</span>
       </div>
       <div ref="uploadEl" :class="uploadEventStatus === 'off' ? 'list-item file-add-box': 'list-item file-add-box file-hover'">
-        <md-icon class="md-size-4x md-primary">note_add</md-icon>
+        <i class="ehome icon-add list-item-icon"></i>
         <span class="list-item-text">新增</span>
       </div>
     </div>
@@ -183,22 +173,24 @@ export default {
 }
 .home-toolbar{
   display: flex;
-  flex-direction: row-reverse;
+  justify-content: flex-end;
 }
 .home-page-list {
   display: flex;
   flex-wrap: wrap;
 }
 .list-item {
-  width: 120px;
-  height: 140px;
   display: flex;
+  padding: 5px 10px;
   flex-direction: column;
   align-items: center;
 }
 .list-item:hover {
   cursor: pointer;
   background-color: rgba(150, 202, 247, 0.5)
+}
+.list-item-icon {
+  font-size: 60px;
 }
 .list-item-checked {
   background-color: rgba(150, 202, 247, 0.5)

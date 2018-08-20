@@ -59,6 +59,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "element-ui": "^2.4.6",
     "formidable": "^1.2.1",
     "github-markdown-css": "^2.10.0",
     "koa": "^2.5.2",
