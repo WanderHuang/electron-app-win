@@ -147,13 +147,10 @@ export default {
       this.delete(this.selected)
     },
     download (file) { // TODO 文件下载
-      this.$http({
-        method: 'post',
-        url: downloadUrl,
-        responseType: 'blob',
-        data: {
-          path: file.path
-        }
+      let formData = new FormData()
+      formData.append('path', file.path)
+      this.$http.post(downloadUrl, formData, {
+        responseType: 'blob'
       })
         .then((res) => {
           // 利用返回的blob对象进行下载
@@ -168,9 +165,9 @@ export default {
         })
     },
     delete (file) {
-      this.$http.post(deleteUrl, {
-        path: file.path
-      })
+      let formData = new FormData()
+      formData.append('path', file.path)
+      this.$http.post(deleteUrl, formData)
         .then(res => {
           if (res.data.code === 0) {
             this.loadDirTrees(this.current)
