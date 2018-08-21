@@ -43,14 +43,27 @@ let sockets = []
 io.on('connection', function(socket){
   console.log(`You connected on 3000`)
   sockets.push(socket)
-  socket.on('msg', data => {
-    console.log(`Got msg : ${data}`)
+  console.log(`socket ${socket.id} is connected`)
+  socket.on('msg', (id, msg) => {
+    console.log(`${id} ${msg.name} says ${msg.content}`)
     sockets.map(sock => {
-        sock.emit('msg', `Got ${data}`)
+        sock.emit('msg', {
+          id: id,
+          name: msg.name,
+          content: msg.content
+        })
     })
   })
+  socket.on('destroy', (id, data) => {
+    let sockIndex = sockets.findIndex(item => {
+      return item.id === id
+    })
+    sockets.splice(sockIndex, 1)
+    console.log(`splite ${sockIndex}  id= ${id}  remained ${sockets.length}`)
+  })
  })
- 
+
+
 console.log(chalk.cyan('Koa is running...'))
 console.log(chalk.cyan('Socket is running...'))
 webSocket.listen(3300)
