@@ -13,15 +13,26 @@
         <i class="ehome icon-file list-item-icon" v-else></i>
         <span class="list-item-text" :title="file.name">{{file.name.length > 8 ? file.name.substring(0, 5) + '...': file.name}}</span>
       </div>
-      <div ref="uploadEl" :class="uploadEventStatus === 'off' ? 'list-item file-add-box': 'list-item file-add-box file-hover'">
+      <div ref="uploadEl" :class="{'list-item file-add-box': true, 'file-hover': uploadEventStatus !== 'off'}" @click="visible = true">
         <i class="ehome icon-add list-item-icon"></i>
         <span class="list-item-text">新增</span>
       </div>
     </div>
+    <el-dialog :visible.sync="visible" title="请输入新文件名称" :close-on-click-modal="false" :show-close="false">
+      <el-form :model="formObj" :rules="formRules">
+        <el-form-item prop="newDirName">
+          <el-input v-model="formObj.newDirName"/>
+        </el-form-item>
+      </el-form>
+      <div>
+        <el-button type="primary" round @click="addNewDir">确定</el-button>
+        <el-button round @click="visible=false">取消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-import {getDirTreeUrl, uploadUrl, downloadUrl, deleteUrl} from '@/api/index'
+import {getDirTreeUrl, uploadUrl, downloadUrl, deleteUrl, addNewDirUrl} from '@/api/index'
 export default {
   name: 'elife-home',
   data: () => {
@@ -30,7 +41,17 @@ export default {
       pipe: [],
       uploadEl: {},
       selected: {},
-      filePath: ''
+      filePath: '',
+      visible: false, // 是否弹窗
+      formObj: {
+        newDirName: null
+      },
+      formRules: {
+        newDirName: [
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { validator: this.dirNameCheck, trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
@@ -163,6 +184,25 @@ export default {
             this.loadDirTrees(this.current)
           }
         })
+    },
+    addNewDir () {
+      this.$http.post(addNewDirUrl, {current: this.current, name: this.formObj.newDirName}).then(res => {
+        if (res.data) {
+          this.formObj.newDirName = null
+          this.visible = false
+          this.loadDirTrees(this.current)
+        } else {
+          console.log('名称重复了')
+        }
+      })
+    },
+    dirNameCheck (rule, value, callback) {
+      let reg = /^[0-9a-zA-Z_]*$/
+      if (!reg.test(value)) {
+        callback(new Error('只能是数字、字母、下划线'))
+      } else {
+        callback()
+      }
     }
   }
 }

@@ -51,4 +51,3 @@ const fileReader = {
   getFileArray: getFileArray
 }
 exports.fileReader = fileReader
-exports.getFileArray = getFileArray

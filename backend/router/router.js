@@ -6,6 +6,7 @@ const chalk = require('chalk')
 
 // server
 const {fileReader} = require('../utils/fileReader')
+const {fileWriter} = require('../utils/fileWriter')
 
 let router = new Router()
 
@@ -96,11 +97,20 @@ router.post('/upload', async (ctx) => {
   ctx.body = '\'_\''
 })
 
+// 获取所有图像的路径
 router.get('/get/images', async ctx => {
   console.log(chalk.yellow('[GET IMAGES]'))
   let absolutePath = path.resolve('backend', 'docs', 'static', 'img')
   let staticPath = path.join('/', 'static', 'img')
   ctx.body = fileReader.getFileArray(absolutePath, staticPath)
+})
+
+// 增加文件夹
+router.post('/add/dir', async ctx => {
+  console.log(chalk.yellow('[ADD Dir]'))
+  let {current, name} = ctx.request.body
+  current = current === '/' ? 'files' : current
+  ctx.body = fileWriter.addNewDirectory(path.resolve('backend', 'docs', current, name))
 })
 
 module.exports = router
