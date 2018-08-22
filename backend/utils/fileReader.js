@@ -27,7 +27,28 @@ const getDirTree = function (base) {
   return res
 }
 
+// 获取文件路径数组
+const getFileArray = (absolute, static) => {
+  let res = []
+  console.log(`-----  ${absolute}`)
+  if (fs.lstatSync(absolute).isDirectory()) {
+    let dirs = fs.readdirSync(absolute)
+    for (let i = 0; i < dirs.length; i++) {
+      let absolute_path = absolute + path.sep + dirs[i]
+      let static_path = static + path.sep + dirs[i]
+      if (fs.lstatSync(absolute_path).isDirectory()) {
+        res.push(...getFileArray(absolute_path, static_path))
+      } else {
+        res.push(static_path)
+      }
+    }
+  }
+  return res
+}
+
 const fileReader = {
-  getDirTree: getDirTree
+  getDirTree: getDirTree,
+  getFileArray: getFileArray
 }
 exports.fileReader = fileReader
+exports.getFileArray = getFileArray

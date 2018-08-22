@@ -22,7 +22,7 @@ router.get('/readArticleByPath', async (ctx) => {
 // get dirs
 router.get('/getDirTree', async (ctx) => {
   console.log(chalk.yellow('[LIST]'))
-  let baseDir = path.resolve('backend', 'docs')
+  let baseDir = path.resolve('backend', 'docs', 'files')
   console.log(baseDir)
   ctx.body = fileReader.getDirTree(baseDir)
 })
@@ -83,10 +83,10 @@ router.post('/upload', async (ctx) => {
   await new Promise((resolve, reject) => {
     form.parse(ctx.req, function (err, valueKeys, fileKeys) {
       let current = valueKeys.current
-      current = current === '/' ? 'docs' : current
+      current = current === '/' ? 'files' : current
       Object.keys(fileKeys).map((key, index) => {
         if (fs.existsSync(fileKeys[key].path)) {
-          fs.copyFileSync(fileKeys[key].path, path.resolve('backend', current, fileKeys[key].name))
+          fs.copyFileSync(fileKeys[key].path, path.resolve('backend', 'docs', current, fileKeys[key].name))
           fs.unlinkSync(fileKeys[key].path)
         }
       })
@@ -94,6 +94,13 @@ router.post('/upload', async (ctx) => {
     })
   })
   ctx.body = '\'_\''
+})
+
+router.get('/get/images', async ctx => {
+  console.log(chalk.yellow('[GET IMAGES]'))
+  let absolutePath = path.resolve('backend', 'docs', 'static', 'img')
+  let staticPath = path.join('/', 'static', 'img')
+  ctx.body = fileReader.getFileArray(absolutePath, staticPath)
 })
 
 module.exports = router

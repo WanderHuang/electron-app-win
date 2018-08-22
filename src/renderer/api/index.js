@@ -14,3 +14,6 @@ export const downloadUrl = `${_config.host}/docs/get`
 
 // 删除文件
 export const deleteUrl = `${_config.host}/docs/delete`
+
+// 获取图像列表
+export const getStaticImagesUrl = `${_config.host}/get/images`
