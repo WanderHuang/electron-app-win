@@ -101,6 +101,10 @@ let rendererConfig = {
             name: 'fonts/[name]--[folder].[ext]'
           }
         }
+      },
+      {
+        test: /\.less$/,
+        use: 'style-loader!css-loader!less-loader'
       }
     ]
   },
