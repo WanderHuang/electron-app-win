@@ -1,0 +1,9 @@
+{
+  "md": "word",
+  "pdf": "word",
+  "txt": "word",
+  "png": "picture",
+  "jpg": "picture",
+  "mp3": "audio",
+  "mp4": "video"
+}

@@ -10,15 +10,17 @@ const {fileWriter} = require('../utils/fileWriter')
 
 let router = new Router()
 
-router.get('/', async ( ctx )=>{
+router.get('/', async (ctx) => {
+  console.log(chalk.yellow('[HELLO WORLD]'))
   ctx.body = 'hello world'
 })
 
-router.get('/readArticleByPath', async (ctx) => {
-  console.log(chalk.yellow('[READ]'))
-  let content = fs.readFileSync(ctx.query.path)
-  ctx.body = content
-})
+// TODO delete these lines, because static resources are managed by koa-static
+// router.get('/readArticleByPath', async (ctx) => {
+//   console.log(chalk.yellow('[READ]'))
+//   let content = fs.readFileSync(ctx.query.path)
+//   ctx.body = content
+// })
 
 // get dirs
 router.get('/getDirTree', async (ctx) => {

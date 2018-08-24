@@ -33,6 +33,7 @@
 </template>
 <script>
 import {getDirTreeUrl, uploadUrl, downloadUrl, deleteUrl, addNewDirUrl} from '@/api/index'
+import mediaType from '&/static/data/home.media-type'
 export default {
   name: 'elife-home',
   data: () => {
@@ -149,7 +150,15 @@ export default {
     },
     readFile () { // 跳转到浏览文件
       console.log(`You will read "${this.selected.path}"`)
-      this.$router.push({name: 'readFile', params: {path: this.selected.path, type: this.selected.type}})
+      let route = {
+        name: 'read',
+        params: {
+          mediaType: mediaType[this.selected.type],
+          path: this.selected.path,
+          type: this.selected.type
+        }
+      }
+      this.$router.push(route)
     },
     refresh () { // 刷新页面
       this.loadDirTrees()

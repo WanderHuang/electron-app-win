@@ -21,8 +21,8 @@ export default new Router({
           component: require('@/components/tabs/news').default
         },
         {
-          path: 'readArticle',
-          name: 'readFile',
+          path: '/read/:mediaType',
+          name: 'read',
           component: require('@/pages/read').default
         },
         {

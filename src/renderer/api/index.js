@@ -1,7 +1,7 @@
 import _config from '&/static/config.json'
 
 // 阅读文章 需要带上文件路径
-export const readArticleUrl = `${_config.host}/`
+export const readStaticsUrl = `${_config.host}/`
 
 // 获取文件树
 export const getDirTreeUrl = `${_config.host}/getDirTree`
