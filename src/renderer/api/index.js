@@ -18,5 +18,8 @@ export const deleteUrl = `${_config.host}/docs/delete`
 // 获取图像列表
 export const getStaticImagesUrl = `${_config.host}/get/images`
 
+// 获取头像列表
+export const getAvatarsUrl = `${_config.host}/get/avatars`
+
 // 增加文件目录
 export const addNewDirUrl = `${_config.host}/add/dir`

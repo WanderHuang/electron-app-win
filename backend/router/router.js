@@ -107,6 +107,14 @@ router.get('/get/images', async ctx => {
   ctx.body = fileReader.getFileArray(absolutePath, staticPath)
 })
 
+// 获取所有头像的路径
+router.get('/get/avatars', async ctx => {
+  console.log(chalk.yellow('[GET IMAGES]'))
+  let absolutePath = path.resolve('backend', 'docs', 'static', 'avatar')
+  let staticPath = path.join('/', 'static', 'avatar')
+  ctx.body = fileReader.getFileArray(absolutePath, staticPath)
+})
+
 // 增加文件夹
 router.post('/add/dir', async ctx => {
   console.log(chalk.yellow('[ADD Dir]'))

@@ -28,5 +28,11 @@
     "path": "/talk",
     "icon": "ehome icon-chat01",
     "text": "群聊"
+  },
+  {
+    "id": 6,
+    "path": "/personal",
+    "icon": "ehome icon-setting",
+    "text": "个人中心"
   }
 ]

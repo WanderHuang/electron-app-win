@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
   routes: [
     {
       path: '/',
@@ -39,6 +39,11 @@ export default new Router({
           path: '/talk',
           name: 'talk',
           component: require('@/components/tabs/talk').default
+        },
+        {
+          path: '/personal',
+          name: 'personal',
+          component: require('@/components/tabs/personal').default
         }
       ]
     },
@@ -48,3 +53,9 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  console.log(`FROM ${from.path} TO ${to.path}`)
+  next()
+})
+export {router}
