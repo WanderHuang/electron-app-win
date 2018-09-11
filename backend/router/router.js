@@ -3,6 +3,8 @@ const Router = require('koa-router')
 const formidable = require('formidable')
 const path = require('path')
 const chalk = require('chalk')
+const User = require('../models/user')
+const userService = require('../service/userService')
 
 // server
 const {fileReader} = require('../utils/fileReader')
@@ -15,12 +17,14 @@ router.get('/', async (ctx) => {
   ctx.body = 'hello world'
 })
 
-// TODO delete these lines, because static resources are managed by koa-static
-// router.get('/readArticleByPath', async (ctx) => {
-//   console.log(chalk.yellow('[READ]'))
-//   let content = fs.readFileSync(ctx.query.path)
-//   ctx.body = content
-// })
+// 登录页面
+router.post('/login', async (ctx) => {
+  console.log(chalk.yellow('[AUTH USER]'))
+  let {username, password} = ctx.request.body
+  let user = new User(username, password, '')
+
+  ctx.body = userService.checkUser(user)
+})
 
 // get dirs
 router.get('/getDirTree', async (ctx) => {

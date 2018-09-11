@@ -1,5 +1,8 @@
 import _config from '&/static/config.json'
 
+// 用户登录
+export const loginUrl = `${_config.host}/login`
+
 // 阅读文章 需要带上文件路径
 export const readStaticsUrl = `${_config.host}/`
 

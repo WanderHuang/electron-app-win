@@ -6,6 +6,11 @@ Vue.use(Router)
 let router = new Router({
   routes: [
     {
+      path: '/login',
+      name: 'login',
+      component: require('@/pages/login').default
+    },
+    {
       path: '/',
       name: 'main',
       component: require('@/components/main').default,
@@ -54,8 +59,4 @@ let router = new Router({
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  console.log(`FROM ${from.path} TO ${to.path}`)
-  next()
-})
 export {router}
