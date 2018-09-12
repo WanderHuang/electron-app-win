@@ -32,7 +32,7 @@ export default {
           { min: 4, max: 16, message: '长度在 4 到 16 个字符', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入账户账户密码', trigger: 'blur' },
+          { required: true, message: '请输入账户密码', trigger: 'blur' },
           { min: 4, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
         ]
       }

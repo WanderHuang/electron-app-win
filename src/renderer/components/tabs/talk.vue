@@ -1,7 +1,7 @@
 <template>
   <div class="ehome-talk-page" @keyup.enter="sendMessage">
     <el-form ref="talk" :model="valideForm" :rules="rules">
-      <div class="talk-plane">
+      <div class="talk-plane ehome-scroll-bar">
         <ul class="talk-item-list">
           <li v-for="msg in messages" class="talk-item">
             <div v-if="msg.type === 'client'" class="talk-self-name">
@@ -89,15 +89,18 @@ export default {
       })
     },
     sendMessage () { // 发送消息
-      this.valideForm.name = this.userInfo.username
-      this.socket.emit('msg', this.socket.id, this.valideForm)
-      this.messages.push({
-        type: 'client',
-        name: this.valideForm.name,
-        avatar: this.userInfo.avatar,
-        content: this.valideForm.content
+      this.$refs.talk.validate((res) => {
+        if (res) {
+          this.socket.emit('msg', this.socket.id, this.valideForm)
+          this.messages.push({
+            type: 'client',
+            name: this.userInfo.name,
+            avatar: this.userInfo.avatar,
+            content: this.valideForm.content
+          })
+          this.valideForm.content = null
+        }
       })
-      this.valideForm.content = null
     }
   }
 }
