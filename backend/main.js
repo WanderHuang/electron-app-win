@@ -3,6 +3,7 @@ const chalk = require('chalk')
 const router = require('./router/router')
 const statics = require('./static/index')
 const bodyParser = require('koa-bodyparser')
+const SocketWorker = require('./service/socketService')
 
 // 注册http服务
 const app = new Koa()
@@ -39,29 +40,10 @@ app2.use(async (ctx, next) => {
 })
 let webSocket = require('http').createServer(app2.callback())
 let io = require('socket.io')(webSocket)
-let sockets = []
-io.on('connection', function(socket){
-  console.log(`You connected on 3000`)
-  sockets.push(socket)
-  console.log(`socket ${socket.id} is connected`)
-  socket.on('msg', (id, msg) => {
-    console.log(`${id} ${msg.name} says ${msg.content}`)
-    sockets.map(sock => {
-        sock.emit('msg', {
-          id: id,
-          name: msg.name,
-          content: msg.content
-        })
-    })
-  })
-  socket.on('destroy', (id, data) => {
-    let sockIndex = sockets.findIndex(item => {
-      return item.id === id
-    })
-    sockets.splice(sockIndex, 1)
-    console.log(`splite ${sockIndex}  id= ${id}  remained ${sockets.length}`)
-  })
- })
+
+// 开启io监听服务
+let socketWorker = new SocketWorker(io)
+socketWorker.run()
 
 
 console.log(chalk.cyan('Koa is running...'))

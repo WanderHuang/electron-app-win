@@ -4,7 +4,6 @@ const state = {
 
 const mutations = {
   SET_USER_INFO (state, val) {
-    console.log(val)
     state.userInfo = val
   }
 }
@@ -13,7 +12,6 @@ const actions = {}
 
 const getters = {
   getUserInfo: state => {
-    console.log(state.userInfo)
     return state.userInfo
   }
 }

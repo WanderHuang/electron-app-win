@@ -24,7 +24,7 @@ let checkUser = (user) => {
     if (!out && user.password.split('').join('#') === Buffer.from(u.password, 'base64').toString('ascii')) {
       let token = Buffer.from(JSON.stringify(u)).toString('base64')
       u.token = token
-      out = token
+      out = u
     }
     return u
   })

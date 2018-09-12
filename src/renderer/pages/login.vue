@@ -46,7 +46,8 @@ export default {
             success: (res) => {
               if (res.code === 0) {
                 // 设置token并跳转
-                this.$store.commit('setToken', res.data)
+                this.$store.commit('setToken', res.data.token)
+                this.$store.commit('SET_USER_INFO', res.data)
                 this.$router.push(this.$route.query.redirectTo)
               }
             },
