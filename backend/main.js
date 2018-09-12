@@ -4,10 +4,12 @@ const router = require('./router/router')
 const statics = require('./static/index')
 const bodyParser = require('koa-bodyparser')
 const SocketWorker = require('./service/socketService')
+const logger = require('koa-logger')
 
 // 注册http服务
 const app = new Koa()
 
+app.use(logger())
 app.use(bodyParser())
 
 app.use(async (ctx, next) => {
@@ -17,13 +19,6 @@ app.use(async (ctx, next) => {
   await next()
  })
 
-app.use(async (ctx, next) => {
-  const start = Date.now()
-  await next()
-  const ms = Date.now() - start
-  console.log(`${ctx.method} ${ctx.url} - ${ms}`)
-})
-
 // 资源服务
 app.use(statics)
 // 路由服务
@@ -31,6 +26,7 @@ app.use(router.routes()).use(router.allowedMethods())
 
 // 注册socket服务
 let app2 = new Koa()
+app2.use(logger())
 app2.use(async (ctx, next) => {
   ctx.set('Access-Control-Allow-Origin', '*')
   ctx.set('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type')
