@@ -6,13 +6,11 @@ import {router} from './router'
 import store from './store'
 
 // vendors
-// import VueMaterial from 'vue-material'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '&/static/style/iconfont/iconfont.css'
-// import 'vue-material/dist/vue-material.min.css'
-// import 'vue-material/dist/theme/black-green-dark.css' // must default css
-// import '&/static/style/custom-material.css'
+import '&/static/style/ehome.css'
+import '&/static/style/custom-ele.less'
 import marked from 'marked'
 
 import pdf from 'pdfjs-dist'

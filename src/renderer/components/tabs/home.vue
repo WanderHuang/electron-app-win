@@ -1,5 +1,5 @@
 <template>
-  <div class="elife-home-page">
+  <div class="ehome-home-page">
     <div class="home-toolbar">
       <el-button type="primary" circle icon="ehome icon-left" @click="goBack"></el-button>
       <el-button type="primary" circle icon="ehome icon-delete" @click="deleteFile"></el-button>
@@ -15,7 +15,7 @@
       </div>
       <div ref="uploadEl" :class="{'list-item file-add-box': true, 'file-hover': uploadEventStatus !== 'off'}" @click="visible = true">
         <i class="ehome icon-add list-item-icon"></i>
-        <span class="list-item-text">新增</span>
+        <span class="list-item-text-add">新增</span>
       </div>
     </div>
     <el-dialog :visible.sync="visible" title="请输入新文件名称" :close-on-click-modal="false" :show-close="false">
@@ -216,41 +216,53 @@ export default {
   }
 }
 </script>
-<style scoped>
-.elife-home-page {
+<style lang="less" scoped>
+.ehome-home-page {
   height: 100%;
-}
-.home-toolbar{
-  display: flex;
-  justify-content: flex-end;
-}
-.home-page-list {
-  display: flex;
-  flex-wrap: wrap;
-}
-.list-item {
-  display: flex;
-  padding: 5px 10px;
-  flex-direction: column;
-  align-items: center;
-}
-.list-item:hover {
-  cursor: pointer;
-  background-color: rgba(150, 202, 247, 0.5)
-}
-.list-item-icon {
-  font-size: 60px;
-}
-.list-item-checked {
-  background-color: rgba(150, 202, 247, 0.5)
-}
-.list-item-checked {
-  background-color: rgba(150, 202, 247, 0.5)
-}
-.list-item .list-item-text {
-  align-content: center;
-}
-.file-hover {
-  border: 10px dashed #0c0;
+  .home-toolbar{
+    display: flex;
+    justify-content: flex-end;
+  }
+  .home-page-list {
+    display: flex;
+    flex-wrap: wrap;
+    .list-item {
+      display: flex;
+      padding: 5px 10px;
+      margin: 2px 5px;
+      flex-direction: column;
+      align-items: center;
+      .list-item-icon {
+        font-size: 60px;
+      }
+      .list-item-checked {
+        background-color: rgba(150, 202, 247, 0.5)
+      }
+      .list-item-checked {
+        background-color: rgba(150, 202, 247, 0.5)
+      }
+      .list-item .list-item-text {
+        align-content: center;
+      }
+      .list-item-text-add {
+        display: inline-block;
+        text-align: justify;
+        width: 60px;
+      }
+      .list-item-text-add::after {
+        content: "";
+        display: inline-block;
+        width: 100%;
+      }
+    }
+    .list-item:hover {
+      cursor: pointer;
+      border-radius: 5px;
+      background-image: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
+    }
+    .file-hover {
+      border: 10px dashed #0c0;
+    }
+  }
 }
 </style>

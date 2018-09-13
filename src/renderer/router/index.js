@@ -17,7 +17,7 @@ let router = new Router({
       children: [
         {
           path: '/home',
-          name: 'main',
+          name: 'home',
           component: require('@/components/tabs/home').default
         },
         {
