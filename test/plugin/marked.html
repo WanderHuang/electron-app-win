@@ -11,35 +11,141 @@
   <!-- marked.js-->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
+    table,table tr th, table tr td {
+      border:1px solid lightgray;
+    }
+    table tr {
+      height: 25px;
+      line-height: 25px;
+    }
+    table {
+      width: 200px;
+      min-height: 25px;
+      line-height: 25px;
+      text-align: center;
+      border-collapse: collapse;
+    }
     #wrapper {
       display: flex;
+      flex-direction: column;
       width: 1000px;
       height: 1000px;
       border: 1px solid pink;
     }
-    #wrapper > div {
+    .tool {
+      width: 100%;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .panel {
+      height: 100%;
+      display: flex;
+      flex: 1;
+    }
+    .panel > div {
       width: 50%;
       height: 100%;
     }
-    #wrapper > div > textarea {
+    .panel > div > textarea {
       height: 100%;
     }
   </style>
 </head>
 <body>
+  
   <div id="wrapper">
-    <el-input type="textarea" placeholder="markdown here" v-model="content"></el-input>
-    <div id="marked" v-html="marked"></div>
+    <div class="tool">
+      <el-popover trigger="hover">
+        <el-container>
+          <el-main>
+            <el-form :model="form">
+              <el-form-item prop="row">
+                <el-input v-model.number="form.row"></el-input>
+              </el-form-item>
+              <el-form-item prop="col">
+                  <el-input v-model.number="form.col"></el-input>
+                </el-form-item>
+            </el-form>
+          </el-main>
+          <el-footer>
+            <el-button @click="insertTable(form)" type="primary" round>Sure</el-button>
+          </el-footer>
+        </el-container>
+        <el-button slot="reference">InsertTable</el-button>
+      </el-popover>
+    </div>
+    <div class="panel">
+      <el-input type="textarea" placeholder="markdown here" v-model="content"></el-input>
+      <div id="marked" v-html="marked"></div>
+    </div>
   </div>
   <script>
+    let enter = '\r\n'
+    let vLine = '|'
+    let hLine = '-'
+    let space = ' '
+
     new Vue({
       el: '#wrapper',
       data: {
-        content: ''
+        form: {
+          row: 0,
+          col: 0
+        },
+        content: '',
+        marked: ''
       },
-      computed: {
-        marked () {
-          return this.marked = marked(this.content)
+      watch: {
+        content(val) {
+          this.marked = marked(this.content)
+        }
+      },
+      methods: {
+        insertTable (form) {
+          // |    name    | age |
+          // | ---------- | --- |
+          // | LearnShare |  12 |
+          // | Mike       |  32 |
+          let {row, col} = form
+          let table = this.generateTable(row, col)
+          this.content += table
+        }, 
+        generateTable(row, col) {
+          let table = ''
+          table += this.setHead(col)
+          table += this.setDividLine(col)
+          for (let i = 0; i < row; i++) {
+            table += this.setBody(col)
+          }
+          table += enter
+          return table
+        },
+        setHead (col, colNames = []) {
+          let out = vLine
+          for (let j = 0; j < col; j++) {
+            let name = colNames !== col ? 'colname' : colNames[j]
+            out += `${name}${space}${vLine}`
+          }
+          out += enter
+          return out
+        },
+        setDividLine (col) {
+          let out = vLine
+          for (let j = 0; j < col; j++) {
+            out += `${space}${hLine}${space}${vLine}`
+          }
+          out += enter
+          return out
+        },
+        setBody (col) {
+          let out = vLine
+          for(let j = 0; j < col; j++) {
+            out += `${space}${space}${space}${vLine}`
+          }
+          out += enter
+          return out
         }
       }
     })
