@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Marked in the browser</title>
+  <!-- Vue -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- Element UI-->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <!-- marked.js-->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    #wrapper {
+      display: flex;
+      width: 1000px;
+      height: 1000px;
+      border: 1px solid pink;
+    }
+    #wrapper > div {
+      width: 50%;
+      height: 100%;
+    }
+    #wrapper > div > textarea {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrapper">
+    <el-input type="textarea" placeholder="markdown here" v-model="content"></el-input>
+    <div id="marked" v-html="marked"></div>
+  </div>
+  <script>
+    new Vue({
+      el: '#wrapper',
+      data: {
+        content: ''
+      },
+      computed: {
+        marked () {
+          return this.marked = marked(this.content)
+        }
+      }
+    })
+  </script>
+</body>
+</html>
