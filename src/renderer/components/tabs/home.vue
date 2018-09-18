@@ -35,7 +35,7 @@
 import {getDirTreeUrl, uploadUrl, downloadUrl, deleteUrl, addNewDirUrl} from '@/api/index'
 import mediaType from '&/static/data/home.media-type'
 export default {
-  name: 'elife-home',
+  name: 'ehome-home',
   data: () => {
     return {
       uploadEventStatus: 'off',
@@ -166,7 +166,7 @@ export default {
     deleteFile () {
       this.delete(this.selected)
     },
-    download (file) { // TODO 文件下载
+    download (file) {
       let formData = new FormData()
       formData.append('path', file.path)
       this.$http.post(downloadUrl, formData, {
