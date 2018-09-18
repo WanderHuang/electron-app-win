@@ -1,21 +1,18 @@
 <template>
   <div class="ehome-photo-page">
-    <el-carousel :interval="4000" type="card" height="400px">
-      <el-carousel-item v-for="url in urls" :key="url">
-        <img :src="sysConfig.host + url" class="img"/>
-      </el-carousel-item>
-    </el-carousel>
+    <scroll-image :images="images" width="500" height="400" class="photo-head"></scroll-image>
   </div>
 </template>
 <script>
 import config from '&/static/config'
 import {getStaticImagesUrl} from '@/api/index'
+import scrollImage from '@/components/common/scrollImage'
 export default {
   name: 'ehome-photo',
+  components: { scrollImage },
   data () {
     return {
-      sysConfig: config,
-      urls: []
+      images: []
     }
   },
   created () {
@@ -25,7 +22,13 @@ export default {
     loadPhotos () {
       this.$http.get(getStaticImagesUrl).then(res => {
         this.urls = res.data
-        console.log(this.urls)
+        if (res && res.data) {
+          this.images = res.data.map(url => {
+            return {
+              url: config.host + url
+            }
+          })
+        }
       })
     }
   }
@@ -34,11 +37,8 @@ export default {
 <style lang="less">
 .ehome-photo-page {
   height: 100%;
-  .el-carousel__item {
-    .img {
-      width: 100%;
-      height: 100%;
-    }
+  .photo-head {
+    margin: 0 auto;
   }
 }
 </style>
