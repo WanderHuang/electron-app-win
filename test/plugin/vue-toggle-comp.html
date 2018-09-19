@@ -1,0 +1,83 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- Vue -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- Element UI-->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+  <div id="wrapper">
+    <el-switch v-model="switchOn" @change="togglePlugin"></el-switch>
+    <el-tabs v-model="plugin" @tab-click="handleClick">
+      <el-tab-pane label="用户管理" name="user">
+        <user-a v-if="pluginVersion === 0"></user-a>
+        <user-b v-if="pluginVersion === 5"></user-b>
+      </el-tab-pane>
+      <el-tab-pane label="配置管理" name="config">
+        <config-a v-if="pluginVersion === 0"></config-a>
+        <config-b v-if="pluginVersion === 5"></config-b>
+      </el-tab-pane>
+      <el-tab-pane label="角色管理" name="role">
+        <role></role>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
+  <script>
+    new Vue({
+      el: '#wrapper',
+      components: {
+        UserA: {
+          template: '<div>UserA</div>',
+          activated () {
+            console.log('user a')
+          }
+        },
+        UserB: {
+          template: '<div>UserB</div>',
+          activated () {
+            console.log('user b')
+          }
+        },
+        ConfigA: {
+          template: '<div>ConfigA</div>',
+          activated () {
+            console.log('config a')
+          }
+        },
+        ConfigB: {
+          template: '<div>ConfigB</div>',
+          activated () {
+            console.log('config b')
+          }
+        },
+        role: {
+          template: '<div>role</div>',
+          activated () {
+            console.log('role')
+          }
+        }
+      },
+      data () {
+        return {
+          plugin: 'user',
+          switchOn: false,
+          pluginVersion: 0
+        }
+      },
+      methods: {
+        handleClick (tab, event) {
+          console.log(tab.name)
+        },
+        togglePlugin (val) {
+          this.pluginVersion = val ? 5 : 0
+        }
+      }
+    })
+  </script>
+</body>
+</html>
