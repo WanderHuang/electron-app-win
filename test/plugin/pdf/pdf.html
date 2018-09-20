@@ -1,0 +1,194 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- less -->
+  <link rel="stylesheet/less" type="text/css" href="style.less" />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.7.1/less.min.js" ></script>
+  <!-- Vue -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- Element UI-->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <!-- pdf -->
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.489/build/pdf.min.js"></script>
+  <script>
+    Vue.prototype.$pdf = pdfjsLib
+  </script>
+  <style>
+    @media print {
+      #page > [class="tools"] {
+          display: none;
+      }
+      #page > [class="datas"] {
+        width: 800px;
+      }
+      #page > [class="datas"] > [id="pdf"] > canvas {
+        width: 800px;
+        height: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="page">
+    <div class="tools">
+      <div class="current-page" v-if="byPageNum">
+        <el-input class="current-page-input" v-model.number="current"></el-input>
+        <div >/</div>
+        <div>{{totalPageNum}}</div>
+      </div>
+      <el-button @click="loadPrev" v-if="byPageNum">Prev</el-button>
+      <el-button @click="loadNext" v-if="byPageNum">Next</el-button>
+      <el-button @click="printAction" icon="el-icon-printer" >Print</el-button>
+      <el-switch v-model="byPageNum" @change="toggle" active-text="按页预览" inactive-text="全篇预览"></el-button>
+    </div>
+    <el-progress :percentage="progress"  color="blue" :show-text="false" :stroke-width="3" v-if="byPageNum"></el-progress>
+    <div class="datas">
+      <template v-if="byPageNum">
+        <div id="pdf">
+          <canvas style="width: 100%; height: 100%"></canvas>
+        </div>
+      </template>
+      <template v-if="!byPageNum">
+          <div id="pdf"></div>
+      </template>
+    </div>
+  </div>
+  <script>
+    let docUrl = 'http://localhost:5600/demo.pdf'
+    new Vue({
+      el: '#page',
+      data () {
+        return {
+          totalPageNum: 0,  // 总页数
+          isLoading: false, // 加载中
+          canvas: {},
+          current: 0,
+          byPageNum: true,
+          allPdfs: []
+        }
+      },
+      computed: {
+        progress () {
+          if (this.totalPageNum < 1) {
+            return 0
+          } else if (this.current < 1) {
+            return 1 / this.totalPageNum * 100
+          } else if (this.current > this.totalPageNum) {
+            return 100
+          } else {
+            return this.current / this.totalPageNum * 100
+          }
+        }
+      },
+      watch: {
+        current (val, old) {
+          if (val < 1 || val > this.totalPageNum) return
+          this.loadPage(val)
+        },
+        byPageNum (val) {
+          if (val) {
+            this.loadPage(this.current)
+          }
+        }
+      },
+      mounted () {
+        this.loadDocument(docUrl)
+      },
+      methods: {
+        loadDocument (path) {
+          let loadingTask = this.$pdf.getDocument(path)
+          loadingTask.promise.then((pdfDocument) => {
+            // 清空缓存
+            this.allPdfs = []
+            // 数据初始化
+            this.totalPageNum = pdfDocument.numPages
+            this.current = 1
+            this.doc = pdfDocument
+            this.loadPage(this.current)
+          })
+        },
+        loadPrev () {
+          if (this.current > 1) {
+            this.current = this.current - 1
+          }
+        },
+        loadNext () {
+          if (this.current < this.totalPageNum) {
+            this.current = this.current + 1
+          }
+        },
+        loadPage(index) {
+          if (this.isLoading) return // 防抖
+          this.isLoading = true
+          let promise = this.doc.getPage(index).then(page => {
+            let viewport = page.getViewport(1)
+            let canvas = document.createElement('canvas')
+            let pdfDom = document.querySelector('#pdf')
+            canvas.width = viewport.width
+            canvas.height = viewport.height
+            let ctx = canvas.getContext('2d')
+            this.canvas = canvas
+            let renderTask = page.render({
+              canvasContext: ctx,
+              viewport: viewport
+            })
+            return renderTask.promise
+          })
+          promise.then((res) => {
+            let pdfDom = document.querySelector('#pdf')
+            pdfDom.removeChild(pdfDom.querySelector('canvas'))
+            pdfDom.appendChild(this.canvas)
+            this.isLoading = false
+          })
+        },
+        toggle (val) {
+          if (!val) {
+            this.loadAllPage()
+          }
+        },
+        loadAllPage () {
+          let promises = []
+          if (this.allPdfs.length === this.totalPageNum) {
+            this.appendCanvas(this.allPdfs)
+          } else {
+            for (let i = 1; i <= this.totalPageNum; i++) {
+              let promise = this.doc.getPage(i)
+                .then(pdfPage => {
+                  let viewport = pdfPage.getViewport(1.0)
+                  let canvas = document.createElement('canvas')
+                  canvas.width = viewport.width
+                  canvas.height = viewport.height
+                  let ctx = canvas.getContext('2d')
+                  let renderTask = pdfPage.render({
+                    canvasContext: ctx,
+                    viewport: viewport
+                  })
+                  this.allPdfs.push(canvas)
+                  return renderTask.promise
+                })
+              promises.push(promise)
+            }
+            Promise.all(promises)
+              .then(res => {
+                this.appendCanvas(this.allPdfs)
+              })
+          }
+        },
+        appendCanvas (doms) {
+          let pdfDom = document.querySelector('#pdf')
+          for (let i = 0; i < doms.length; i++) {
+            pdfDom.appendChild(doms[i])
+          }
+        },
+        printAction () {
+          window.print()
+        }
+      }
+    })
+  </script>
+</body>
+</html>
