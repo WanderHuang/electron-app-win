@@ -1,0 +1,98 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- Vue -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- Element UI-->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <style>
+    .panel {
+      width: 400px;
+      height: 300px;
+      overflow-y: scroll;
+    }
+    .message{
+      width: 400px;
+    }
+  </style>
+</head>
+<body>
+  <div id="main">
+    <div class="panel">
+      <ul>
+        <li v-for="msg in messages">
+          <div v-html="msg"></div>
+        </li>
+      </ul>
+    </div>
+    <div class="message">
+      <el-autocomplete v-model="msg" hide-loading :trigger-on-focus="false" :fetch-suggestions="suggest" @select="select"></el-autocomplete>
+      <el-button @click="push">PUSH</el-button>
+    </div>
+  </div>
+  <script>
+    new Vue({
+      el: '#main',
+      data () {
+        return {
+          msg: '',
+          selected: [],
+          users: [
+            {value: 'zhangsan'},
+            {value: 'zhangsi'},
+            {value: 'zhangwu'},
+            {value: 'wangyi'},
+            {value: 'wanger'},
+            {value: 'liliu'},
+            {value: 'liqi'},
+            {value: '王一二'},
+            {value: '王一三'},
+          ],
+          messages: []
+        }
+      },
+      methods: {
+        push () {
+          if (this.msg !== '') {
+            this.messages.push(this.getWords(this.msg))
+            this.msg = ''
+          }
+        },
+        suggest (str, cb) {
+          let onlyAt = str === '@'
+          let words = str.split('@')
+          let sentence = words[words.length - 1]
+          let res = []
+          this.users.map((item, index) => {
+            item.content = this.msg + item.value + ' '
+            item.index = index
+            if (onlyAt) {
+              res.push(item)
+            } else if (item.value.startsWith(sentence)) {
+              res.push(item)
+            }
+          })
+          cb(res)
+        },
+        select (item) {
+          this.selected.push(item.index)
+          this.msg = item.content
+        },
+        getWords(msg) {
+          for (let i = 0; i < this.selected.length; i++) {
+            let item = this.users[this.selected[i]]
+            if (item && item.value) {
+              msg = msg.replace(/@[^@\s]*\s{1}/, `<span style="color: lightblue">${item.value}</span>`)
+            }
+          }
+          return msg
+        }
+      }
+    })
+  </script>
+</body>
+</html>
