@@ -1,0 +1,16 @@
+{
+  "appenders": {
+    "records": {
+      "type": "file",
+      "filename": "records.log",
+      "pattern": "-yyyy-MM-dd.log",
+      "alwaysIncludePattern": true
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": ["records"],
+      "level": "debug"
+    }
+  }
+}

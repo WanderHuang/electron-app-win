@@ -6,6 +6,8 @@ const bodyParser = require('koa-bodyparser')
 const SocketWorker = require('./service/socketService')
 const logger = require('koa-logger')
 
+const log = require('./config/logger.js')
+
 // 注册http服务
 const app = new Koa()
 
@@ -42,9 +44,7 @@ let socketWorker = new SocketWorker(io)
 socketWorker.run()
 
 
-console.log(chalk.cyan('Koa is running...'))
-console.log(chalk.cyan('Socket is running...'))
-webSocket.listen(3300)
-app.listen(3000)
-console.log(chalk.cyan('Koa is Listening on 3000'))
-console.log(chalk.cyan('Socket is Listening on 3300'))
+app.listen(3333)
+webSocket.listen(3334)
+
+log.info('Ehome is on 3333[api] & 3334[socket]')

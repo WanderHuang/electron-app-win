@@ -1,5 +1,5 @@
 
-const chalk = require('chalk')
+const logger = require('../config/logger.js')
 class SocketWorker {
   constructor(io) {
     this.io = io
@@ -9,9 +9,12 @@ class SocketWorker {
   run() {
     let sockets = this.sockets
     this.io.on('connection', function(socket) {
+      logger.info('[socketService] [connection]', `socket ${socket.id} is connected`)
       sockets.push(socket)
-      console.log(chalk.greenBright(`socket ${socket.id} is connected`))
+
+      // receive message
       socket.on('msg', (id, msg) => {
+        logger.info('[socketService] [msg]', `${JSON.stringify(msg)}`)
         // 拿到消息广播出去
         sockets.map(sock => {
           sock.emit('msg', {
@@ -21,14 +24,17 @@ class SocketWorker {
           })
         })
       })
+
+      // log out
       socket.on('destroy', (id, data) => {
         let sockIndex = sockets.findIndex(item => {
           return item.id === id
         })
         sockets.splice(sockIndex, 1)
-        console.log(chalk.redBright(`splite ${sockIndex}  id= ${id}  remained ${sockets.length}`))
+        logger.info('[socketService] [destroy]', `splite ${sockIndex}  id= ${id}  remained ${sockets.length}`)
       })
     })
   }
 }
+
 module.exports = SocketWorker

@@ -4,7 +4,6 @@ const path = require('path')
 // 获取文件树
 const getDirTree = function (base) {
   let res = []
-  console.log(`-----  ${base}`)
   if (fs.lstatSync(base).isDirectory()) {
     let dirs = fs.readdirSync(base)
     for (let i = 0; i < dirs.length; i++) {
@@ -30,7 +29,6 @@ const getDirTree = function (base) {
 // 获取文件路径数组
 const getFileArray = (absolute, static) => {
   let res = []
-  console.log(`-----  ${absolute}`)
   if (fs.lstatSync(absolute).isDirectory()) {
     let dirs = fs.readdirSync(absolute)
     for (let i = 0; i < dirs.length; i++) {
