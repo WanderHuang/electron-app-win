@@ -29,7 +29,7 @@ router.post('/login', async (ctx) => {
 // get dirs
 router.get('/getDirTree', async (ctx) => {
   logger.info('/getDirTree', '[LIST]')
-  let baseDir = path.resolve('backend', 'docs', 'files')
+  let baseDir = path.resolve('docs', 'files')
   logger.info(baseDir)
   ctx.body = fileReader.getDirTree(baseDir)
 })
@@ -45,7 +45,7 @@ router.post('/docs/delete', async (ctx) => {
       resolve()
     })
   })
-  let realPath = path.resolve('backend', params.path)
+  let realPath = path.resolve(params.path)
   logger.info('DELETE', realPath)
   if(fs.existsSync(realPath)) {
     fs.unlinkSync(realPath)
@@ -83,7 +83,7 @@ router.post('/docs/get', async ( ctx ) => {
 router.post('/upload', async (ctx) => {
   logger.info('/upload', '[UPLOAD]')
   const form = new formidable.IncomingForm()
-  form.uploadDir = path.resolve('backend', 'upload')
+  form.uploadDir = path.resolve('upload')
   form.hash = 'md5'
   form.multiples = true
 
@@ -93,7 +93,7 @@ router.post('/upload', async (ctx) => {
       current = current === '/' ? 'files' : current
       Object.keys(fileKeys).map((key, index) => {
         if (fs.existsSync(fileKeys[key].path)) {
-          fs.copyFileSync(fileKeys[key].path, path.resolve('backend', 'docs', current, fileKeys[key].name))
+          fs.copyFileSync(fileKeys[key].path, path.resolve('docs', current, fileKeys[key].name))
           fs.unlinkSync(fileKeys[key].path)
         }
       })
@@ -106,7 +106,7 @@ router.post('/upload', async (ctx) => {
 // 获取所有图像的路径
 router.get('/get/images', async ctx => {
   logger.info('/get/images', '[GET IMAGES]')
-  let absolutePath = path.resolve('backend', 'docs', 'static', 'img')
+  let absolutePath = path.resolve('docs', 'static', 'img')
   let staticPath = path.join('/', 'static', 'img')
   ctx.body = fileReader.getFileArray(absolutePath, staticPath)
 })
@@ -114,7 +114,7 @@ router.get('/get/images', async ctx => {
 // 获取所有头像的路径
 router.get('/get/avatars', async ctx => {
   logger.info('/get/avatars', '[GET IMAGES]')
-  let absolutePath = path.resolve('backend', 'docs', 'static', 'avatar')
+  let absolutePath = path.resolve('docs', 'static', 'avatar')
   let staticPath = path.join('/', 'static', 'avatar')
   ctx.body = fileReader.getFileArray(absolutePath, staticPath)
 })
@@ -124,7 +124,7 @@ router.post('/add/dir', async ctx => {
   logger.info('/add/dir', '[ADD Dir]')
   let {current, name} = ctx.request.body
   current = current === '/' ? 'files' : current
-  ctx.body = fileWriter.addNewDirectory(path.resolve('backend', 'docs', current, name))
+  ctx.body = fileWriter.addNewDirectory(path.resolve('docs', current, name))
 })
 
 module.exports = router
