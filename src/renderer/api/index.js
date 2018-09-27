@@ -6,6 +6,9 @@ export const loginUrl = `${_config.host}/login`
 // 用户注册
 export const registUrl = `${_config.host}/regist`
 
+// 用户修改
+export const updateUserUrl = `${_config.host}/user/update`
+
 // 阅读文章 需要带上文件路径
 export const readStaticsUrl = `${_config.host}/`
 

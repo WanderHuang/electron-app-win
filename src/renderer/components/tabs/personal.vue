@@ -11,7 +11,7 @@
       </el-menu>
     </el-aside>
     <el-main>
-      <norm-setting v-if="index === 'norm'" :baseInfo="info"></norm-setting>
+      <norm-setting v-if="index === 'norm'"></norm-setting>
     </el-main>
   </el-container>
 </template>
@@ -22,10 +22,7 @@ export default {
   components: { NormSetting },
   data () {
     return {
-      index: 'service',
-      info: {
-        name: 'wander'
-      }
+      index: 'service'
     }
   },
   methods: {

@@ -2,7 +2,7 @@
   <div class="ehome-norm-setting">
     <el-form label-width="80px" :model="info" class="setting-form">
       <el-form-item label="用户昵称">
-        <el-input v-model="info.name"></el-input>
+        <el-input disabled v-model="info.username"></el-input>
       </el-form-item>
       <el-form-item label="用户头像" class="setting-avatar">
         <img :src="info.avatar"/>
@@ -23,20 +23,15 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import config from '&/static/config'
-import {getAvatarsUrl} from '@/api/index'
+import {getAvatarsUrl, updateUserUrl} from '@/api/index'
 export default {
   name: 'NormSetting',
-  props: {
-    baseInfo: {
-      type: Object,
-      default: () => {}
-    }
-  },
   data () {
     return {
       info: {
-        name: 'WANDER HUANG',
+        username: 'WANDER HUANG',
         avatar: '',
         address: ''
       },
@@ -44,6 +39,14 @@ export default {
       sysConfig: config,
       urls: []
     }
+  },
+  computed: {
+    ...mapGetters({
+      userInfo: 'getUserInfo'
+    })
+  },
+  mounted () {
+    this.info = JSON.parse(JSON.stringify(this.userInfo))
   },
   methods: {
     loadAvatars () {
@@ -60,7 +63,16 @@ export default {
       this.showAvatars = false
     },
     saveUserInfo () { // 提交用户信息到vuex
-      this.$store.commit('SET_USER_INFO', this.info)
+      this.$h.post(updateUserUrl, this.info, {
+        success: (res) => {
+          if (res.code === 0) {
+            this.$store.commit('SET_USER_INFO', this.info)
+          }
+        },
+        fail: (err) => {
+          console.log(err)
+        }
+      })
     }
   }
 }
