@@ -12,27 +12,40 @@
       </div>
     </el-main>
     <el-aside width="400px" class="form-wrapper">
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px" width="300px" class="form-list">
-        <el-form-item label="账户号码" prop="username">
-          <el-input v-model="form.username"></el-input>
-        </el-form-item>
-        <el-form-item label="用户密码" prop="password">
-          <el-input type="password" auto-complete="off" v-model="form.password"></el-input>
-        </el-form-item>
-      </el-form>
-      <div class="button-wrapper">
-        <el-button type="success" @click.stop="regist">注册</el-button>
-        <el-button type="primary" @click.stop="login">登录</el-button>
-      </div>
+      <template v-if="!isRegister">
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px" width="300px" class="form-list">
+          <el-form-item label="账户号码" prop="username">
+            <el-input v-model="form.username"></el-input>
+          </el-form-item>
+          <el-form-item label="用户密码" prop="password">
+            <el-input type="password" auto-complete="off" v-model="form.password"></el-input>
+          </el-form-item>
+        </el-form>
+        <div class="button-wrapper">
+          <el-button type="success" @click.stop="regist">注册</el-button>
+          <el-button type="primary" @click.stop="login">登录</el-button>
+        </div>
+      </template>
+      <template v-else>
+        <register ref="register"></register>
+        <div class="button-wrapper">
+          <el-button type="success" @click.stop="backToLogin">返回</el-button>
+          <el-button type="primary" @click.stop="sureToRegist">确认</el-button>
+        </div>
+      </template>
     </el-aside>
+    <div class="loading" v-loading="isLoading" v-if="isLoading" element-loading-text="注册成功 正在登录" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)"></div>
   </el-container>
 </template>
 <script>
-import {loginUrl} from '@/api/index'
+import {loginUrl, registUrl} from '@/api/index'
+import register from '@/pages/register'
 export default {
   name: 'login',
   data () {
     return {
+      isRegister: false, // 是注册界面
+      isLoading: false, // loading
       form: {},
       rules: {
         username: [
@@ -41,33 +54,64 @@ export default {
         ],
         password: [
           { required: true, message: '请输入账户密码', trigger: 'blur' },
-          { min: 4, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
+          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
         ]
       }
     }
   },
+  components: { register },
   methods: {
     login () {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.$h.post(loginUrl, this.form, {
-            success: (res) => {
-              if (res.code === 0) {
-                // 设置token并跳转
-                this.$store.commit('setToken', res.data.token)
-                this.$store.commit('SET_USER_INFO', res.data)
-                this.$router.push(this.$route.query.redirectTo)
-              }
-            },
-            fail: (errmsg) => {
-              console.log('fail')
-            }
-          })
+          this.checkUserAndGetToken(this.form.username, btoa(this.form.password))
         }
       })
     },
     regist () {
-      console.log(`haven't open for registing`)
+      this.isRegister = true
+    },
+    checkUserAndGetToken (username, password) {
+      this.$h.post(loginUrl, {username, password}, {
+        success: (res) => {
+          if (res.code === 0) {
+            // 设置token并跳转
+            this.$store.commit('setToken', res.data.token)
+            this.$store.commit('SET_USER_INFO', res.data)
+            this.$router.push(this.$route.query.redirectTo)
+          }
+        },
+        fail: (errmsg) => {
+          console.log('fail')
+        }
+      })
+    },
+    backToLogin () { // 返回登录
+      this.$refs.register.formData = {}
+      this.form = {}
+      this.isRegister = false
+    },
+    sureToRegist () { // 确认注册
+      let form = new FormData()
+      form.append('username', this.$refs.register.formData.username)
+      form.append('password', btoa(this.$refs.register.formData.password1)) // base64
+      this.$refs.register.$refs.form.validate(valid => {
+        if (valid) {
+          this.$h.post(registUrl, form, {
+            success: res => {
+              if (res.code === 0) {
+                this.isLoading = true
+                setTimeout(() => {
+                  this.checkUserAndGetToken(res.data.name, btoa(atob(res.data.password).split('#').join('')))
+                }, 3000)
+              }
+            },
+            fail: err => {
+              console.log(err)
+            }
+          })
+        }
+      })
     }
   }
 }
@@ -146,6 +190,11 @@ export default {
         width: @full-size;
       }
     }
+  }
+  .loading {
+    position: absolute;
+    width: 100%;
+    height: 100%;
   }
 }
 

@@ -10,11 +10,9 @@ let getUsers = () => {
 // 新增user
 let addUser = (user) => {
   logger.info('[userSerivice] [addUser]', `${JSON.stringify(user)}`)
-  let {username, password} = user
-  password = Buffer.from(password).toString('base64')
-  user.username = username
-  user.password = password
+  user.password = Buffer.from(user.password.split('').join('#')).toString('base64')
   users.push(user)
+  return new ResultSet(user, 0).getResult()
 }
 
 // 校验user

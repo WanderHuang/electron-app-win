@@ -21,9 +21,22 @@ router.get('/', async (ctx) => {
 router.post('/login', async (ctx) => {
   logger.info('/login', '[AUTH USER]')
   let {username, password} = ctx.request.body
-  let user = new User(username, password, '')
+  ctx.body = userService.checkUser(new User(username, Buffer.from(password, 'base64').toString('ascii'), ''))
+})
 
-  ctx.body = userService.checkUser(user)
+// 用户注册
+router.post('/regist', async (ctx) => {
+  logger.info('/regist', '[AUTH USER]')
+  const form = new formidable.IncomingForm()
+  let user = {}
+  await new Promise((resolve, reject) => {
+    form.parse(ctx.req, function (err, valueKeys, fileKeys) {
+      user = valueKeys
+      resolve()
+    })
+  })
+  user.password = Buffer.from(user.password, 'base64').toString('ascii')
+  ctx.body = userService.addUser(new User(user.username, user.password, ''))
 })
 
 // get dirs
