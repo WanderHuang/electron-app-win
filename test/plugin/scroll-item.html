@@ -28,8 +28,34 @@
         transform: translate3d(0, -0, 0)
       }
     }
+
+    @keyframes scroll-words-2 {
+      0% {
+        transform: translate3d(0, 30px, 0)
+      }
+      20% {
+        transform: translate3d(0, 0px, 0)
+      }
+      40% {
+        transform: translate3d(0, -30px, 0)
+      }
+      60% {
+        transform: translate3d(0, -60px, 0)
+      }
+      80% {
+        transform: translate3d(0, -90px, 0)
+      }
+      99.9% {
+        transform: translate3d(0, -120px, 0)
+      }
+      100% {
+        transform: translate3d(0, -360px, 0)
+      }
+    }
+
+
     .scroll-wrap {
-      width: 300px;
+      width: 500px;
       height: 35px;
       overflow: hidden;
       display: flex;
@@ -42,23 +68,32 @@
       text-align: center;
       margin-left: 20px;
     }
+    .scroll-item, .scroll-item-2 {
+      display: flex;
+      flex-direction: column;
+    }
     .scroll-item {
       width: 100px;
       animation: scroll-words 12s infinite reverse;
     }
-    .scroll-item > span {
+    .scroll-item-2 {
+      width: 200px;
+      animation: scroll-words-2 12s infinite;
+    }
+    .scroll-item > span, .scroll-item-2 > span {
+      margin-left: 10px;
       font-size: 24px;
     }
-    .scroll-item > span:nth-child(1) {
+    .scroll-item > span:nth-child(1), .scroll-item-2 > span:nth-child(1) {
       color: lightcoral;
     }
-    .scroll-item > span:nth-child(2) {
+    .scroll-item > span:nth-child(2), .scroll-item-2 > span:nth-child(2) {
       color: lightgray;
     }
-    .scroll-item > span:nth-child(3) {
+    .scroll-item > span:nth-child(3), .scroll-item-2 > span:nth-child(3) {
       color: lightpink;
     }
-    .scroll-item > span:nth-child(4) {
+    .scroll-item > span:nth-child(4), .scroll-item-2 > span:nth-child(4) {
       color: lightgreen;
     }
   </style>
@@ -71,7 +106,13 @@
       <span>CHANGE</span>
       <span>INSPIRE</span>
     </div>
-    <span>the life</span>
+    <span>the life, feeling</span>
+    <div class="scroll-item-2">
+      <span>COLORFUL</span>
+      <span>WANDERFUL</span>
+      <span>NICE</span>
+      <span>WARM</span>
+    </div>
   </div>
 </body>
 </html>
