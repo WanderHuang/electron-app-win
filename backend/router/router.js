@@ -20,8 +20,9 @@ router.get('/', async (ctx) => {
 // 登录页面
 router.post('/login', async (ctx) => {
   logger.info('/login', '[AUTH USER]')
-  let {username, password} = ctx.request.body
-  ctx.body = userService.checkUser(new User(username, Buffer.from(password, 'base64').toString('ascii'), ''))
+  let user = ctx.request.body
+  user.password = Buffer.from(user.password, 'base64').toString('ascii')
+  ctx.body = userService.checkUser(new User(user))
 })
 
 // 用户注册
@@ -36,7 +37,14 @@ router.post('/regist', async (ctx) => {
     })
   })
   user.password = Buffer.from(user.password, 'base64').toString('ascii')
-  ctx.body = userService.addUser(new User(user.username, user.password, ''))
+  ctx.body = userService.addUser(new User(user))
+})
+
+// 用户更新
+router.post('/user/update', async (ctx) => {
+  logger.info('/user/update', '[USER UPDATE]')
+  let userInfo = ctx.request.body
+  ctx.body = userService.updateUser(userInfo)
 })
 
 // get dirs

@@ -18,7 +18,7 @@
             <el-input v-model="form.username"></el-input>
           </el-form-item>
           <el-form-item label="用户密码" prop="password">
-            <el-input type="password" auto-complete="off" v-model="form.password"></el-input>
+            <el-input type="password" auto-complete="off" v-model="form.password" @keyup.enter.native="login"></el-input>
           </el-form-item>
         </el-form>
         <div class="button-wrapper">
@@ -27,14 +27,14 @@
         </div>
       </template>
       <template v-else>
-        <register ref="register"></register>
+        <register ref="register" class="form-list"></register>
         <div class="button-wrapper">
           <el-button type="success" @click.stop="backToLogin">返回</el-button>
           <el-button type="primary" @click.stop="sureToRegist">确认</el-button>
         </div>
       </template>
     </el-aside>
-    <div class="loading" v-loading="isLoading" v-if="isLoading" element-loading-text="注册成功 正在登录" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)"></div>
+    <div class="loading" v-loading="isLoading" v-if="isLoading" element-loading-text="正在登陆..." element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)"></div>
   </el-container>
 </template>
 <script>
@@ -64,7 +64,10 @@ export default {
     login () {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.checkUserAndGetToken(this.form.username, btoa(this.form.password))
+          this.isLoading = true
+          setTimeout(() => {
+            this.checkUserAndGetToken(this.form.username, btoa(this.form.password))
+          }, 1000)
         }
       })
     },
@@ -74,6 +77,7 @@ export default {
     checkUserAndGetToken (username, password) {
       this.$h.post(loginUrl, {username, password}, {
         success: (res) => {
+          this.isLoading = false
           if (res.code === 0) {
             // 设置token并跳转
             this.$store.commit('setToken', res.data.token)
@@ -95,6 +99,8 @@ export default {
       let form = new FormData()
       form.append('username', this.$refs.register.formData.username)
       form.append('password', btoa(this.$refs.register.formData.password1)) // base64
+      form.append('avatar', this.$refs.register.formData.avatar)
+      form.append('address', this.$refs.register.formData.address)
       this.$refs.register.$refs.form.validate(valid => {
         if (valid) {
           this.$h.post(registUrl, form, {
@@ -102,7 +108,7 @@ export default {
               if (res.code === 0) {
                 this.isLoading = true
                 setTimeout(() => {
-                  this.checkUserAndGetToken(res.data.name, btoa(atob(res.data.password).split('#').join('')))
+                  this.checkUserAndGetToken(res.data.username, btoa(atob(res.data.password).split('#').join('')))
                 }, 3000)
               }
             },

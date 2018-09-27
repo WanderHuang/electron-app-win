@@ -6,28 +6,26 @@
       </el-form-item>
       <el-form-item label="用户头像" class="setting-avatar">
         <img :src="info.avatar"/>
-        <el-button type="primary" round @click="openAvatarList" class="button-select">选择</el-button>
+        <el-button type="primary" @click="showAvatars = true" class="button-select">选择</el-button>
       </el-form-item>
       <el-form-item label="家庭住址">
         <el-input v-model="info.address"></el-input>
       </el-form-item>
     </el-form>
     <div class="button-wrapper">
-      <el-button type="primary" round @click="saveUserInfo">保存</el-button>
+      <el-button type="primary" @click="saveUserInfo">保存</el-button>
     </div>
-    <el-dialog :visible.sync="showAvatars" title="头像选择">
-      <div class="avatar-wrapper">
-        <img v-for="url in urls" :src="sysConfig.host + url" width="64" height="64" @click="chooseAvatar(url)"/>
-      </div>
-    </el-dialog>
+    <avatar-picker :visible.sync="showAvatars" @avatarChosen="chooseAvatar"></avatar-picker>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import config from '&/static/config'
-import {getAvatarsUrl, updateUserUrl} from '@/api/index'
+import {updateUserUrl} from '@/api/index'
+import avatarPicker from '@/components/common/avatarPicker'
 export default {
   name: 'NormSetting',
+  components: {avatarPicker},
   data () {
     return {
       info: {
@@ -49,17 +47,8 @@ export default {
     this.info = JSON.parse(JSON.stringify(this.userInfo))
   },
   methods: {
-    loadAvatars () {
-      this.$http.get(getAvatarsUrl).then(res => {
-        this.urls = res.data
-      })
-    },
-    openAvatarList () { // 打开头像列表
-      this.showAvatars = true
-      this.loadAvatars()
-    },
     chooseAvatar (url) { // 选中某头像
-      this.info.avatar = this.sysConfig.host + url
+      this.info.avatar = url
       this.showAvatars = false
     },
     saveUserInfo () { // 提交用户信息到vuex
