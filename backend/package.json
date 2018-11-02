@@ -7,7 +7,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "backend": "node main.js"
+    "dev": "nodemon main.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,7 @@
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "log4js": "^3.0.5",
+    "nodemon": "^1.18.5",
     "socket.io": "^2.1.1"
   },
   "description": ""

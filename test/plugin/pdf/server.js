@@ -10,7 +10,7 @@ const app = new Koa()
 
 const router = new Router()
 
-router.get('/', async(ctx, next) => {
+router.get('/', async (ctx, next) => {
   ctx.set('Content-Type', 'text/html')
   ctx.body = fs.readFileSync(path.resolve('test', 'plugin', 'pdf', 'pdf.html'))
 })

@@ -6,18 +6,17 @@ const bodyParser = require('koa-bodyparser')
 
 const app = new Koa()
 
-
-let token = ['123', '456', '789']
+// let token = ['123', '456', '789']
 
 const router = new Router()
 
-/**internal error test */
-router.get('/error', async(ctx, next) => {
+/** internal error test */
+router.get('/error', async (ctx, next) => {
   throw new Error('fail')
 })
 
-/**success test */
-router.get('/success', async(ctx, next) => {
+/** success test */
+router.get('/success', async (ctx, next) => {
   console.log(chalk.cyan('---- success ----'))
   console.log(querystring.parse(ctx.querystring))
   ctx.body = {
@@ -27,8 +26,8 @@ router.get('/success', async(ctx, next) => {
   }
 })
 
-/**fail test */
-router.get('/fail', async(ctx, next) => {
+/** fail test */
+router.get('/fail', async (ctx, next) => {
   console.log(chalk.cyan('---- fail ----'))
   ctx.body = {
     errcode: 1,
@@ -37,8 +36,8 @@ router.get('/fail', async(ctx, next) => {
   }
 })
 
-/**error test */
-router.get('/401', async(ctx, next) => {
+/** error test */
+router.get('/401', async (ctx, next) => {
   console.log(chalk.cyan('---- 401 ----'))
   console.log(querystring.parse(ctx.querystring))
   let err = {
@@ -49,8 +48,8 @@ router.get('/401', async(ctx, next) => {
   ctx.throw(401, 'your auth token is illeagal', err)
 })
 
-/**error test */
-router.get('/504', async(ctx, next) => {
+/** error test */
+router.get('/504', async (ctx, next) => {
   console.log(chalk.cyan('---- 504 ----'))
   console.log(querystring.parse(ctx.querystring))
   let err = {
@@ -62,7 +61,7 @@ router.get('/504', async(ctx, next) => {
 })
 
 /** cookie test */
-router.get('/cookie', async(ctx, next) => {
+router.get('/cookie', async (ctx, next) => {
   console.log(chalk.cyan('---- cookie ----'))
   console.log(ctx.cookies.get('acookie'))
   ctx.cookies.set('another', 'This is another cookie')
@@ -74,7 +73,7 @@ router.get('/cookie', async(ctx, next) => {
 })
 
 /** headers test */
-router.get('/headers', async(ctx, next) => {
+router.get('/headers', async (ctx, next) => {
   console.log(chalk.cyan('---- headers ----'))
   console.log(ctx.headers)
   ctx.body = {
@@ -85,7 +84,7 @@ router.get('/headers', async(ctx, next) => {
 })
 
 /** post test */
-router.post('/postDatas', async(ctx, next) => {
+router.post('/postDatas', async (ctx, next) => {
   console.log(chalk.cyan('---- post ----'))
   console.log(ctx.request.body) // body-parser json
   ctx.body = {

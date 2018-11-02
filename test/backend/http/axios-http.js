@@ -1,17 +1,16 @@
 const chalk = require('chalk')
 const axios = require('axios')
-const querystring = require('querystring') // node; if browser, FormData
+// const querystring = require('querystring') // node; if browser, FormData
 
 const host = 'http://localhost:5600/'
 const token = '1234'
 
-
-function HttpProxy(opts) {
+function HttpProxy (opts) {
   this.$http = axios.create({
     baseURL: opts.baseURL,
     withCredentials: true,
     timeout: opts.timeout || 3000,
-    headers:{ // config all default headers
+    headers: { // config all default headers
       'token': token,
       Cookie: 'acookie=this is acookie; '
     }
@@ -44,65 +43,63 @@ HttpProxy.prototype.get = function (url, data, success, fail) {
   this.$http.get(url, {
     params: data
   })
-  .then(res => {
-    if (res.status === 200) { // request is all successful
-      let data = res.data
-      if (data.errcode !== 0) {
-        console.log(chalk.cyan('errcode shows this requestion is fail'))
-        fail && fail(data)
+    .then(res => {
+      if (res.status === 200) { // request is all successful
+        let data = res.data
+        if (data.errcode !== 0) {
+          console.log(chalk.cyan('errcode shows this requestion is fail'))
+          fail && fail(data)
+        } else {
+          console.log(chalk.cyan('errcode shows this requestion is success'))
+          success && success(data)
+        }
       } else {
-        console.log(chalk.cyan('errcode shows this requestion is success'))
-        success && success(data)
+        fail && fail({
+          errcode: 1,
+          errmsg: 'request is error, please check your http request manually',
+          data: res.data.data
+        })
       }
-    } else {
-      fail && fail({
-        errcode: 1,
-        errmsg: 'request is error, please check your http request manually',
-        data: res.data.data
-      })
-    }
-  })
-  .catch(err => {
-    console.log(chalk.cyan('errcode shows this requestion is error'))
-    fail && fail({
-      errcode: err.response.status,
-      errmsg: err.response.statusText,
-      data: err.response.data
     })
-  })
+    .catch(err => {
+      console.log(chalk.cyan('errcode shows this requestion is error'))
+      fail && fail({
+        errcode: err.response.status,
+        errmsg: err.response.statusText,
+        data: err.response.data
+      })
+    })
 }
 
-HttpProxy.prototype.post = function(url, data, success, fail) {
+HttpProxy.prototype.post = function (url, data, success, fail) {
   this.$http.post(url, data)
-  .then(res => {
-    if (res.status === 200) { // request is all successful
-      let data = res.data
-      if (data.errcode !== 0) {
-        console.log(chalk.cyan('errcode shows this requestion is fail'))
-        fail && fail(data)
+    .then(res => {
+      if (res.status === 200) { // request is all successful
+        let data = res.data
+        if (data.errcode !== 0) {
+          console.log(chalk.cyan('errcode shows this requestion is fail'))
+          fail && fail(data)
+        } else {
+          console.log(chalk.cyan('errcode shows this requestion is success'))
+          success && success(data)
+        }
       } else {
-        console.log(chalk.cyan('errcode shows this requestion is success'))
-        success && success(data)
+        fail && fail({
+          errcode: 1,
+          errmsg: 'request is error, please check your http request manually',
+          data: res.data.data
+        })
       }
-    } else {
-      fail && fail({
-        errcode: 1,
-        errmsg: 'request is error, please check your http request manually',
-        data: res.data.data
-      })
-    }
-  })
-  .catch(err => {
-    console.log(chalk.cyan('errcode shows this requestion is error'))
-    fail && fail({
-      errcode: err.response.status,
-      errmsg: err.response.statusText,
-      data: err.response.data
     })
-  })
+    .catch(err => {
+      console.log(chalk.cyan('errcode shows this requestion is error'))
+      fail && fail({
+        errcode: err.response.status,
+        errmsg: err.response.statusText,
+        data: err.response.data
+      })
+    })
 }
-
-
 
 let http = new HttpProxy({
   baseURL: host
