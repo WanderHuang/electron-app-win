@@ -1,0 +1,21 @@
+.masonry-image {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  .img-wrapper {
+    background-color: lightpink;
+    margin: 2px;
+    .img-wrapper-flex-box {
+      img {
+        min-width: 100%;
+        max-width: 100%;
+        object-fit: cover;
+        vertical-align: bottom;
+      }
+    }
+  }
+}
+.masonry-image::after {
+  content: '';
+  flex-grow: 9999999999;
+}

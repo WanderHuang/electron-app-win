@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const { getImageInfo } = require('./imageManager')
 
 // 获取文件树
 const getDirTree = function (base) {
@@ -37,7 +38,9 @@ const getFileArray = (absolute, static) => {
       if (fs.lstatSync(absolute_path).isDirectory()) {
         res.push(...getFileArray(absolute_path, static_path))
       } else {
-        res.push(static_path)
+        let info = getImageInfo(absolute_path)
+        info.url = static_path
+        res.push(info)
       }
     }
   }

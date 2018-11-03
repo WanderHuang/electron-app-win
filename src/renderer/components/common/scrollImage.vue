@@ -1,5 +1,5 @@
 <template>
-  <div class="scroll-image" :style="{width: scrollWidth, height: scrollHeight}">
+  <div class="scroll-image">
     <image-slider @wheel.native="wheel" :images="images" :index="index" :max="max"></image-slider>
   </div>
 </template>
@@ -11,18 +11,6 @@ export default {
       type: Array,
       default () {
         return []
-      }
-    },
-    width: {
-      type: String,
-      default () {
-        return '400'
-      }
-    },
-    height: {
-      type: String,
-      default () {
-        return '400'
       }
     }
   },
@@ -58,6 +46,7 @@ export default {
 </script>
 <style lang="less">
 .scroll-image {
-  position: relative;
+  width: 100%;
+  height: 100%;
 }
 </style>

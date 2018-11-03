@@ -1,6 +1,6 @@
 <template>
   <div class="image-slider">
-    <img v-for="(img, index) in images" :src="img.url" v-show="imageIndex === index" width="100%" height="100%"/>
+    <img v-for="(img, index) in images" :src="img.url" v-show="imageIndex === index" :width="img.width" :height="img.height" class="image-slider-img-box"/>
     <div class="image-slider-wrapper">
       <el-slider v-model="percent" vertical :height="slideHeight" :min="0" :max="max" @change="change"></el-slider>
     </div>
@@ -58,6 +58,14 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+  .image-slider-img-box {
+    max-width: 1080px;
+    max-height: 786px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+  }
   .image-slider-wrapper {
     position: absolute;
     right: 5px;
