@@ -30,6 +30,15 @@ Vue.prototype.$marked = marked
 Vue.http = Vue.prototype.$http = axios
 Vue.$h = Vue.prototype.$h = http
 Vue.prototype.$pdf = pdf
+// custom notify
+Vue.prototype.$warning = function (title, message, duration) {
+  this.$notify({
+    title: title,
+    message: message,
+    showClose: false,
+    duration: duration
+  })
+}
 
 router.beforeEach((to, from, next) => {
   console.log(`FROM ${from.path} TO ${to.path}`)

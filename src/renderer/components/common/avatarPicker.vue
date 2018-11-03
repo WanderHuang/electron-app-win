@@ -1,7 +1,7 @@
 <template>
   <el-dialog :visible.sync="visible" title="头像选择">
     <div class="avatar-wrapper">
-      <img v-for="url in urls" :src="sysConfig.host + url" width="64" height="64" @click="chooseAvatar(sysConfig.host + url)"/>
+      <img v-for="img in images" :src="sysConfig.host + img.url" width="64" height="64" @click="chooseAvatar(sysConfig.host + img.url)"/>
     </div>
   </el-dialog>
 </template>
@@ -18,9 +18,9 @@ export default {
   },
   watch: {
     visible (val) {
-      if (val && !this.urls.length) {
+      if (val && !this.images.length) {
         this.$http.get(getAvatarsUrl).then(res => {
-          this.urls = res.data
+          this.images = res.data
         })
       }
     }
@@ -28,7 +28,7 @@ export default {
   data () {
     return {
       sysConfig: config,
-      urls: []
+      images: []
     }
   },
   methods: {
@@ -38,7 +38,7 @@ export default {
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .avatar-wrapper {
   height: 300px;
   overflow: scroll;

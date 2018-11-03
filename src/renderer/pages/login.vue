@@ -82,7 +82,9 @@ export default {
             // 设置token并跳转
             this.$store.commit('setToken', res.data.token)
             this.$store.commit('SET_USER_INFO', res.data)
-            this.$router.push(this.$route.query.redirectTo)
+            this.$router.push('/main/home')
+          } else {
+            this.$warning('登录失败', '请输入正确的用户名和密码', 2000)
           }
         },
         fail: (errmsg) => {

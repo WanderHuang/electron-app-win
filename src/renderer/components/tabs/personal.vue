@@ -2,27 +2,32 @@
   <el-container>
     <el-aside class="ehome-personal-page">
       <el-menu class="personal-menu" :default-active="index" @select="menuChange">
-        <el-menu-item index="norm">
+        <el-menu-item index="NormSetting">
           <i class="el-icon-setting"></i>
+          <span slot="title">个人设置</span>
         </el-menu-item>
-        <el-menu-item index="service">
-          <i class="el-icon-service"></i>
+        <el-menu-item index="LogOut">
+          <i class="el-icon-remove"></i>
+          <span slot="title">退出登录</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
     <el-main>
-      <norm-setting v-if="index === 'norm'"></norm-setting>
+      <keep-alive>
+        <component :is="index"></component>
+      </keep-alive>
     </el-main>
   </el-container>
 </template>
 <script>
 import NormSetting from '@/components/personal/NormSetting'
+import LogOut from '@/components/personal/LogOut'
 export default {
   name: 'personal',
-  components: { NormSetting },
+  components: { NormSetting, LogOut },
   data () {
     return {
-      index: 'service'
+      index: 'NormSetting'
     }
   },
   methods: {
@@ -34,7 +39,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .ehome-personal-page {
-  width: 100px !important;
+  width: 160px !important;
   height: 400px;
   .personal-menu {
     background: transparent;
