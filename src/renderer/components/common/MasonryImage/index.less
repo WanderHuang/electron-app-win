@@ -6,11 +6,57 @@
     background-color: lightpink;
     margin: 2px;
     .img-wrapper-flex-box {
-      img {
+      position: relative;
+      .image {
         min-width: 100%;
         max-width: 100%;
         object-fit: cover;
         vertical-align: bottom;
+      }
+      .info {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        min-height: 30px;
+        height: 50px;
+        background: transparent;
+        opacity: 0;
+        transition: opacity 1s ease-in;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        .avatar-wrapper {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+          }
+          .name {
+            font-size: 16px;
+            color: #fff;
+            line-height: 30px;
+            margin-left: 10px;
+            width: 80px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+          }
+        }
+        .tools {
+          & button {
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            color: #fff;
+            background: transparent;
+            border-color: #fff;
+          }
+        }
       }
     }
   }
