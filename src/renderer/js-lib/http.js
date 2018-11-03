@@ -12,9 +12,8 @@ let getFormData = (params) => {
 // get方法
 let get = (url, params, config) => {
   axios.get(url, {params}).then(res => {
-    console.log(res)
     let success = config.success
-    success && success()
+    success && success(res)
   })
 }
 

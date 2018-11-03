@@ -6,7 +6,7 @@
         <div class="info" :style="{opacity: infoStyles[img.url]}">
           <div class="avatar-wrapper">
             <img class="avatar" :src="img.avatar" alt="NONE">
-            <div class="name">{{img.name}}</div>
+            <div class="name">{{img.username}}</div>
           </div>
           <div class="tools">
             <el-button icon="el-icon-star-off" circle></el-button>

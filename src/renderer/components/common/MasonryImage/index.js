@@ -15,8 +15,6 @@ export default {
     images (vals) {
       vals && vals.map(item => {
         this.infoStyles[item.url] = 0
-        item.avatar = 'http://localhost:3333/static/avatar/B001.jpg'
-        item.name = 'wander huang'
       })
     }
   },

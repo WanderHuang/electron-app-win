@@ -15,6 +15,7 @@ import config from '&/static/config'
 import {getStaticImagesUrl} from '@/api/index'
 import scrollImage from '@/components/common/scrollImage'
 import MasonryImage from '@/components/common/MasonryImage/index.vue'
+import { mapGetters } from 'vuex'
 export default {
   name: 'ehome-photo',
   components: { scrollImage, MasonryImage },
@@ -32,6 +33,11 @@ export default {
       plugin: 'MasonryImage'
     }
   },
+  computed: {
+    ...mapGetters({
+      userInfo: 'getUserInfo'
+    })
+  },
   watch: {
     plugin () {
       this.setWrapperHeight()
@@ -46,13 +52,15 @@ export default {
   },
   methods: {
     loadPhotos () {
-      this.$http.get(getStaticImagesUrl).then(res => {
-        this.urls = res.data
-        if (res && res.data) {
-          this.images = res.data.map(item => {
-            item.url = config.host + item.url
-            return item
-          })
+      this.$h.get(getStaticImagesUrl, this.userInfo, {
+        success: res => {
+          this.urls = res.data
+          if (res && res.data) {
+            this.images = res.data.map(item => {
+              item.url = config.host + item.url
+              return item
+            })
+          }
         }
       })
     },

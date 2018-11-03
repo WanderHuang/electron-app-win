@@ -47,8 +47,27 @@ const getFileArray = (absolute, static) => {
   return res
 }
 
+// 用户名下的所有图像
+const getUserImagesArray = (absolute, static, user) => {
+  let res = []
+  if (fs.existsSync(absolute) && fs.lstatSync(absolute).isDirectory()) {
+    let dirs = fs.readdirSync(absolute)
+    for (let i = 0; i < dirs.length; i++) {
+      let absolute_path = absolute + path.sep + dirs[i]
+      let static_path = static + path.sep + dirs[i]
+      let info = getImageInfo(absolute_path)
+      info.url = static_path
+      info.avatar = user.avatar
+      info.username = user.username
+      res.push(info)
+    }
+  }
+  return res
+}
+
 const fileReader = {
   getDirTree: getDirTree,
-  getFileArray: getFileArray
+  getFileArray: getFileArray,
+  getUserImagesArray: getUserImagesArray
 }
 exports.fileReader = fileReader

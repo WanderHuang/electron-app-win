@@ -127,9 +127,10 @@ router.post('/upload', async (ctx) => {
 // 获取所有图像的路径
 router.get('/get/images', async ctx => {
   logger.info('/get/images', '[GET IMAGES]')
-  let absolutePath = path.resolve('docs', 'static', 'img')
-  let staticPath = path.join('/', 'static', 'img')
-  ctx.body = fileReader.getFileArray(absolutePath, staticPath)
+  let { username, avatar } = ctx.query
+  let absolutePath = path.resolve('docs', 'static', 'img', username)
+  let staticPath = path.join('/', 'static', 'img', username)
+  ctx.body = fileReader.getUserImagesArray(absolutePath, staticPath, new User({username, avatar}))
 })
 
 // 获取所有头像的路径
