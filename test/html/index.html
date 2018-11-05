@@ -1,0 +1,95 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .magazine {
+      -moz-column-count:3; /* Firefox */
+      -webkit-column-count:3; /* Safari and Chrome */
+      column-count:3;
+
+      -moz-column-gap:40px; /* Firefox */
+      -webkit-column-gap:40px; /* Safari and Chrome */
+      column-gap:20px;
+
+      -moz-column-rule:4px outset #ff00ff; /* Firefox */
+      -webkit-column-rule:4px outset #ff00ff; /* Safari and Chrome */
+      column-rule:6px outset #ff00ff;
+    }
+  </style>
+</head>
+<body>
+  <form action="" method="get">
+    <!-- 输入列表 -->
+    <input list="Country">
+    <datalist id="Country">
+      <option value="India">
+      <option value="Italy">
+      <option value="Iran">
+      <option value="Israel">
+      <option value="Indonesia">
+    </datalist>
+    <!-- 选择色彩 -->
+    <input type="color" name="favcolor">
+    <!-- 选择日期 -->
+    <input type="date" name="bday">
+    <!-- 选择日期 -->
+    <input type="datetime-local" name="bdaytime">
+    <!-- 邮件 -->
+    <input type="email" name="email">
+    <!-- 路径 -->
+    <input type="url" name="sitename">
+    <!-- 数字 -->
+    <input type="number" name="quantity" min="1" max="5">
+    <!-- 范围 -->
+    <input type="range" min="0" max="10" step="2" value="6">
+    <!-- 搜索器 -->
+    <input type="search" name="googleengine">
+    <!-- 时间 -->
+    <input type="time" name="usr_time">
+    <!-- 电话号码 -->
+    <input type="tel" name="mytel">
+    <button type="submit">确定</button>
+  </form>
+  <svg id="svgelem" height="100" xmlns="http://www.w3.org/2000/svg">
+    <line style="stroke: rgb(255, 0, 0); stroke-width: 2px;" y2="100" x2="100" y1="0" x1="0">
+  </line>
+  <!-- 分割文字 -->
+  <div class="magazine">
+    Your text goes here which you want to divide in to 3 columns.
+    Your text goes here which you want to divide in to 3 columns.
+    Your text goes here which you want to divide in to 3 columns.
+    Your text goes here which you want to divide in to 3 columns.
+    Your text goes here which you want to divide in to 3 columns.
+    Your text goes here which you want to divide in to 3 columns.
+    Your text goes here which you want to divide in to 3 columns.
+    Your text goes here which you want to divide in to 3 columns.
+    Your text goes here which you want to divide in to 3 columns.
+    Your text goes here which you want to divide in to 3 columns.
+    Your text goes here which you want to divide in to 3 columns.
+    Your text goes here which you want to divide in to 3 columns.
+    Your text goes here which you want to divide in to 3 columns.
+  </div>
+  <!-- 图像标题 -->
+  <figure>
+    <img src="path/to/image" alt="About image" />
+    <figcaption>
+        <p>This is an image of something interesting. Title</p>
+    </figcaption>
+  </figure>
+  <!-- 可编辑列表 -->
+  <ul contenteditable=true>
+      <li>悼念遇难香港同胞 </li>
+      <li>深圳特区30周年</li>
+      <li>伊春空难</li>
+  </ul>
+  <!-- 计算结果 -->
+  <form onsubmit="return false"  oninput="o.value = parseInt(a.value) + parseInt(b.value)">
+    <input name="a" type="number"> +
+    <input name="b" type="number"> =
+    <output name="o" />
+  </form>
+</body>
+</html>
